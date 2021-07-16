@@ -1,0 +1,16 @@
+variableStartSymbol=?
+variableLimit=[...]
+formulaStartSymbol=!
+formulaLimit={...}
+commentLineChar=#
+
+datasetFilter=contains("(.*)","cat\\(")
+
+outputlist=`grep("(.*)R","cat\\(\'(.*)=")>>before("=")>>after("'")`
+
+#output.cat.if=contains("(.*)","cat\\(' ',")
+#output.cat.get=lines("(.*)Rout") >> filter("^ (.*)") >> get(-1)
+#output.cat.default="0.123"
+
+output.???.get=lines("(.*)Rout") >> filter("^???=(.*)") >> after("=")
+
