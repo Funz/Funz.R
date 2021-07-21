@@ -1,10 +1,10 @@
 Package: Funz
 Type: Package
-Title: Funz parametric computing environment
+Title: Funz Parametric Computing Environment
 Version: 1.12-0
 Author: Yann Richet
 Maintainer: Yann Richet <yann.richet@irsn.fr>
-Description: Binding to Funz (https://funz.github.io/) parametric computing environment, to emulate simulation model as a function.
+Description: Binding to Funz <https://funz.github.io/> parametric computing environment, to emulate simulation model as a function.
     Also provide function to deal with Funz setup (eg. install plugin/binding to simulation software, algorithms, ...).
 License: Apache License (>= 2)
 Encoding: UTF-8

@@ -1,0 +1,10 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+LICENSE
+^.*\.png$
+^.*\.Rmd$
+^.*\.xml$
+^.*\.Rdata$
+^.*=.*$
+report.*$
+cran-comments.md

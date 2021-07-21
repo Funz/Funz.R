@@ -1,4 +1,4 @@
-.onLoad <- function(libname, pkgname){
+.onLoad <- function(libname, pkgname) {
   gv = c(".jclassFunz", ".jclassFile", ".jclassData", ".jclassFormat", ".jclassPrint",
          ".jclassDesignShell", ".jclassRunShell", ".jclassShell", ".jclassLinkedHashMap",
          ".jclassHashMap", ".jclassConstants", ".jclassSystem", ".jclassUtils",".jclassSystem",
@@ -6,8 +6,15 @@
   utils::globalVariables(gv,package = pkgname)
   for (v in gv)
     assign(v, NULL, envir = parent.env(environment()))
-  source(file.path(system.file("Funz",package = "Funz"),"Funz.R"),local=parent.env(environment()))
-  Funz.init(system.file("Funz",package = "Funz"),verbosity=0)
+  assign("FUNZ_HOME",system.file("Funz", package = "Funz"), envir = parent.env(environment()))
+
+  source(file.path(FUNZ_HOME,"Funz.R"),local=parent.env(environment()))
+  Funz.init(FUNZ_HOME,
+            verbosity=0,
+            java.control=if (Sys.info()[['sysname']]=="Windows")
+                           list(Xmx="512m",Xss="256k", app.user=tempdir())
+                         else
+                           list(Xmx="512m",            app.user=tempdir()))
 }
 
 
@@ -24,7 +31,7 @@
 
 ############################ Models #################################
 
-#' Get available Funz Designs
+#' Get available Funz Models
 #'
 #' @return array of available Models in Funz environment.
 #' @export
@@ -70,7 +77,7 @@ install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plu
     } else
       message("Model ",model," was already installed. Forcing new installation...")
 
-  utils::unzip(zipfile=model.zip, exdir=system.file("Funz",package = "Funz"),...)
+  utils::unzip(zipfile=model.zip, exdir=FUNZ_HOME,...)
 
   eval({
     .jclassFunz$init()
@@ -95,17 +102,17 @@ install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plu
 setup.Model <- function(model) {
   # Setup script file
   if (Sys.info()[['sysname']]=="Windows")
-    script = file.path(system.file("Funz",package = "Funz"),"scripts",paste0(model,".bat"))
+    script = file.path(FUNZ_HOME,"scripts",paste0(model,".bat"))
   else
-    script = file.path(system.file("Funz",package = "Funz"),"scripts",paste0(model,".sh"))
+    script = file.path(FUNZ_HOME,"scripts",paste0(model,".sh"))
 
   if (!file.exists(script))
-    if (Sys.info()[['sysname']]=="Windows")
+    if (Sys.info()[['sysname']]=="Windows") {
       writeLines(paste0("@echo off\n\nREM Fill this file to launch ",model,"\nREM First argument will be the main file"),
                  file(script))
-  else
-    writeLines(paste0("#!/bin/bash\n\n# Fill this file to launch ",model,"\n# First argument will be the main file"),
-               file(script))
+    } else {
+      writeLines(paste0("#!/bin/bash\n\n# Fill this file to launch ",model,"\n# First argument will be the main file"),
+                 file(script))
 
   message("The script used to launch ",model," is now opened in the editor.")
   utils::file.edit(script)
@@ -114,7 +121,7 @@ setup.Model <- function(model) {
   # Update calculator.xml
   calculator.xml = xml2::as_list(
     xml2::read_xml(
-      file.path(system.file("Funz",package = "Funz"),"calculator.xml")))
+      file.path(FUNZ_HOME,"calculator.xml")))
   found = F
   for (i in 1:length(calculator.xml$CALCULATOR)) {
     node <- calculator.xml$CALCULATOR[[i]]
@@ -122,7 +129,7 @@ setup.Model <- function(model) {
       if (attr(node,"name") == model) {
         found = T
         attr(node,"command") <- normalizePath(script)
-        cplugin = file.path(system.file("Funz",package = "Funz"),"plugins","calc",paste0(model,".cplugin.jar"))
+        cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
         if (file.exists(cplugin))
           attr(node,"cplugin") <- normalizePath(cplugin)
       }
@@ -136,7 +143,7 @@ setup.Model <- function(model) {
     node = list()
     attr(node,"name") <- model
     attr(node,"command") <- normalizePath(script)
-    cplugin = file.path(system.file("Funz",package = "Funz"),"plugins","calc",paste0(model,".cplugin.jar"))
+    cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
     if (file.exists(cplugin))
       attr(node,"cplugin") <- normalizePath(cplugin)
   }
@@ -147,7 +154,7 @@ setup.Model <- function(model) {
   calculator.xml$CALCULATOR <- calculator.xml$CALCULATOR[!is.na(calculator.xml$CALCULATOR)]
   xml2::write_xml(
     xml2::as_xml_document(calculator.xml),
-    file.path(system.file("Funz",package = "Funz"),"calculator.xml"),
+    file.path(FUNZ_HOME,"calculator.xml"),
     options=c("format","no_empty_tags","no_declaration","as_xml"))
 
 }
@@ -160,7 +167,7 @@ setup.Model <- function(model) {
 #' @export
 #' @examples
 #' \dontrun{
-#' install_github.Model('Python')
+#' install_github.Model('Modelica')
 #' }
 install_github.Model <- function(model,force=F) {
   major = gsub("-(.*)","",utils::packageDescription("Funz")$Version)
@@ -185,7 +192,7 @@ install_github.Model <- function(model,force=F) {
 #'
 #' @examples
 #' \dontrun{
-#' install.Model('Python')
+#' install.Model('Modelica')
 #' }
 install.Model <- function(model,force=F) {
   if (file.exists(model))
@@ -197,6 +204,7 @@ install.Model <- function(model,force=F) {
       stop("Model ",model," is not available.")
   }
 }
+
 
 ############################ Designs #################################
 
@@ -231,7 +239,7 @@ available.Designs <- function(refresh_repo = F) {
 
 #' Install Funz design plugin from local zip file.
 #'
-#' @param design.zip zip file of algorithm. Usually plugin-XYZ.zip
+#' @param design.zip zip file of algorithm. Usually algorithm-XYZ.zip
 #' @param design design name (parsed in design.zip if not provided)
 #' @param force if already installed, reinstall.
 #' @param ... optional parameters to pass to unzip()
@@ -249,7 +257,7 @@ install_file.Design <- function(design.zip, design=gsub(".zip(.*)","",gsub("(.*)
     } else
       message("Design ",design," was already installed. Forcing new installation...")
 
-  utils::unzip(zipfile=design.zip, exdir=system.file("Funz",package = "Funz"),...)
+  utils::unzip(zipfile=design.zip, exdir=FUNZ_HOME,...)
 
   eval({
     .jclassFunz$init()
@@ -308,4 +316,3 @@ install.Design <- function(design,force=F) {
       stop("Design ",design," is not available.")
   }
 }
-

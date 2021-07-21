@@ -16,19 +16,32 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' # This will startup calculator service instances later used to run model
-#' startCalculators(5)
+#' # Basic response surface of Branin function. R is used as the model, for testing purpose.
+#' calcs = startCalculators(5) # Will start calculator instances later used by Run()
 #' Run(model = "R",
-#'   input.files = file.path(system.file("Funz",package = "Funz"),"samples","branin.R"),
-#'   input.variables = list(x1=runif(10), x2=runif(10)),
+#'   input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
+#'   input.variables = list(x1=seq(0,1,by=0.1),x2=seq(0,1,by=0.1)),
+#'   all.combinations=TRUE,
 #'   output.expressions = "z")
+#' persp(z=matrix(unlist(.Funz.Last.run$results$z),nrow=11),zlab="z")
+#' stopCalculators(calcs) # Shutdown calculators (otherwise stay in background)
+#'
+#' # More realistic case using Modelica. Assumes that (Open)Modelica is already installed.
+#' install.Model("Modelica") # Install Modelica plugin
+#' calcs = startCalculators(5) # Will start calculator instances later used by Run()
+#' NewtonCooling = Run(model = "Modelica",
+#'   input.files = file.path(Funz:::FUNZ_HOME,"samples","NewtonCooling.mo.par"),
+#'   input.variables = list(convection=seq(0.001,1,by=0.05)),
+#'   output.expressions = "min(T)")
+#' plot(NewtonCooling$convection, NewtonCooling$`min(T)`)
+#' stopCalculators(calcs) # Shutdown calculators (otherwise stay in background)
 #' }
 Run <- function(model=NULL,input.files,
                 input.variables=NULL,all.combinations=FALSE,
                 output.expressions=NULL,
                 run.control=list(force.retry=2,cache.dir=NULL),
                 monitor.control=list(sleep=5,display.fun=NULL),
-                archive.dir=NULL,verbosity=0) {
+                archive.dir=NULL,verbosity=1) {
     Funz_Run(model=model,input.files=input.files,
              input.variables=input.variables,all.combinations=all.combinations,output.expressions=output.expressions,
              run.control=run.control,monitor.control=monitor.control,
@@ -55,17 +68,17 @@ Run <- function(model=NULL,input.files,
 #' @export
 #' @examples
 #' \dontrun{
-#' # This will download on gtihub the GradientDescent algorithm
+#' # Download on github the GradientDescent algorithm, and install it:
 #' install.Design("GradientDescent")
 #' Design(fun = function(X){abs(X$x1*X$x2)},
 #'   design = "GradientDescent", options = list(nmax=10),
-#'   input.variables = list(x1="[0,1]",x2="[1,2]"), verbosity=10)
+#'   input.variables = list(x1="[0,1]",x2="[1,2]"))
 #' }
 Design <- function(fun, design, options=NULL,
                    input.variables,
                    fun.control=list(cache=FALSE,vectorize="fun",vectorize.by=1,foreach.options=NULL),
                    monitor.control=list(results.tmp=TRUE),
-                   archive.dir=NULL,verbosity=0,...) {
+                   archive.dir=NULL,verbosity=1,...) {
     Funz_Design(fun=fun,design=design,options=options,
                 input.variables=input.variables,
                 fun.control=fun.control,monitor.control=monitor.control,
@@ -91,25 +104,34 @@ Design <- function(fun, design, options=NULL,
 #' @export
 #' @examples
 #' \dontrun{
-#' # This will download on gtihub the GradientDescent algorithm
-#' install.Design("GradientDescent")
-#' # This will startup calculator service instances later used to run model
-#' startCalculators(5)
+#' # Search for minimum of Branin function, taken as the model (test case)
+#' install.Design("GradientDescent") # Download on github the GradientDescent algorithm
+#' startCalculators(5) # start calculator instances to run model
 #' RunDesign(model="R",
-#'           input.files=file.path(system.file("Funz",package = "Funz"),"samples","branin.R"),
+#'           input.files=file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'           output.expressions="cat", design = "GradientDescent",
-#'           design.options = list(nmax=5),input.variables = list(x1="[0,1]",x2="[0,1]"))
-#' RunDesign(model="R",
-#'           input.files=file.path(system.file("Funz",package = "Funz"),"samples","branin.R"),
-#'           output.expressions="cat", design = "GradientDescent",
-#'           design.options = list(nmax=5),input.variables = list(x1="[0,1]",x2=c(0,1)))
+#'           design.options = list(nmax=10),input.variables = list(x1="[0,1]",x2="[0,1]"))
+#'
+#' # More realistic case using inversion of Modelica:
+#' #  find convection coefficient that gives minimal temperature of 40 degrees.
+#' install.Model("Modelica") # Install Modelica plugin (Assumes that Modelica is already installed)
+#' install.Design("Brent")   # Install Brent algorithm for inversion
+#' calcs = startCalculators(5) # Will start calculator instances, later used by Run()
+#' NewtonCooling = RunDesign(model = "Modelica",
+#'   input.files = file.path(Funz:::FUNZ_HOME,"samples","NewtonCooling.mo.par"),
+#'   input.variables = list(convection="[0.0001,1]"), output.expressions = "min(T)",
+#'   design="Brent",design.options=list(ytarget=40.0))
+#' plot(NewtonCooling$convection[[1]], NewtonCooling$`min(T)`[[1]])
+#' abline(h=40.0)
+#' abline(v=NewtonCooling$analysis.root)
+#' stopCalculators(calcs) # Shutdown calculators (otherwise stay in background)
 #' }
 RunDesign <- function(model=NULL,input.files,
                       input.variables=NULL,output.expressions=NULL,
                       design=NULL,design.options=NULL,
                       run.control=list(force.retry=2,cache.dir=NULL),
                       monitor.control=list(results.tmp=TRUE,sleep=5,display.fun=NULL),
-                      archive.dir=NULL,verbosity=0) {
+                      archive.dir=NULL,verbosity=1) {
     Funz_RunDesign(model=model,input.files=input.files,output.expressions=output.expressions,
                    design=design,input.variables=input.variables,design.options=design.options,
                                run.control=run.control,monitor.control=monitor.control,
@@ -117,7 +139,7 @@ RunDesign <- function(model=NULL,input.files,
 }
 
 
-#' Conveniency method to find variables & related info. in parametrized file.
+#' Convenience method to find variables & related info. in parametrized file.
 #'
 #' @param model name of the code wrapper to use. See .Funz.Models global var for a list of possible values.
 #' @param input.files files to give as input for the code.
@@ -126,12 +148,12 @@ RunDesign <- function(model=NULL,input.files,
 #' @export
 #' @examples
 #' ParseInput(model = "R",
-#'            input.files = file.path(system.file("Funz",package = "Funz"),"samples","branin.R"))
+#'            input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"))
 ParseInput <- function(model,input.files) {
     Funz_ParseInput(model=model,input.files=input.files)
 }
 
-#' Conveniency method to compile variables in parametrized file.
+#' Convenience method to compile variables in parametrized file.
 #'
 #' @param model name of the code wrapper to use. See .Funz.Models global var for a list of possible values.
 #' @param input.files files to give as input for the code.
@@ -141,16 +163,16 @@ ParseInput <- function(model,input.files) {
 #' @export
 #' @examples
 #' CompileInput(model = "R",
-#'              input.files = file.path(system.file("Funz",package = "Funz"),"samples","branin.R"),
+#'              input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'              input.values = list(x1=0.5, x2=0.6))
 #' CompileInput(model = "R",
-#'              input.files = file.path(system.file("Funz",package = "Funz"),"samples","branin.R"),
+#'              input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'              input.values = list(x1=c(0.5,.55), b=c(0.6,.7)))
 CompileInput <- function(model,input.files,input.values,output.dir=".") {
     Funz_CompileInput(model=model,input.files=input.files,input.values=input.values,output.dir=output.dir)
 }
 
-#' Conveniency method to find variables & related info. in parametrized file.
+#' Convenience method to find variables & related info. in parametrized file.
 #'
 #' @param model name of the code wrapper to use. See .Funz.Models global var for a list of possible values.
 #' @param input.files files given as input for the code.
