@@ -42,10 +42,19 @@ Run <- function(model=NULL,input.files,
                 run.control=list(force.retry=2,cache.dir=NULL),
                 monitor.control=list(sleep=5,display.fun=NULL),
                 archive.dir=NULL,verbosity=1) {
-    Funz_Run(model=model,input.files=input.files,
+    return(Funz_Run(model=model,input.files=input.files,
              input.variables=input.variables,all.combinations=all.combinations,output.expressions=output.expressions,
              run.control=run.control,monitor.control=monitor.control,
-             archive.dir=archive.dir,verbosity=verbosity,log.file=F)
+             archive.dir=archive.dir,verbosity=verbosity,log.file=F))
+}
+
+
+#' Get last Funz Run(...) call
+#'
+#' @return last Funz Run(...) call
+#' @export
+.Last.run <- function() {
+    return(.Funz.Last.run)
 }
 
 #' Apply a design of experiments through Funz environment on a response surface.
@@ -71,7 +80,7 @@ Run <- function(model=NULL,input.files,
 #' # Download on github the GradientDescent algorithm, and install it:
 #' install.Design("GradientDescent")
 #' Design(fun = function(X){abs(X$x1*X$x2)},
-#'   design = "GradientDescent", options = list(nmax=10),
+#'   design = "GradientDescent", options = list(max_iterations=10),
 #'   input.variables = list(x1="[0,1]",x2="[1,2]"))
 #' }
 Design <- function(fun, design, options=NULL,
@@ -79,10 +88,18 @@ Design <- function(fun, design, options=NULL,
                    fun.control=list(cache=FALSE,vectorize="fun",vectorize.by=1,foreach.options=NULL),
                    monitor.control=list(results.tmp=TRUE),
                    archive.dir=NULL,verbosity=1,...) {
-    Funz_Design(fun=fun,design=design,options=options,
+    return(Funz_Design(fun=fun,design=design,options=options,
                 input.variables=input.variables,
                 fun.control=fun.control,monitor.control=monitor.control,
-                archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE,...)
+                archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE,...))
+}
+
+#' Get last Funz Design(...) call
+#'
+#' @return last Funz Design(...) call
+#' @export
+.Last.design <- function() {
+    return(.Funz.Last.design)
 }
 
 #' Call an external (to R) code wrapped through Funz environment.
@@ -110,7 +127,7 @@ Design <- function(fun, design, options=NULL,
 #' RunDesign(model="R",
 #'           input.files=file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'           output.expressions="cat", design = "GradientDescent",
-#'           design.options = list(nmax=10),input.variables = list(x1="[0,1]",x2="[0,1]"))
+#'           design.options = list(max_iterations=10),input.variables = list(x1="[0,1]",x2="[0,1]"))
 #'
 #' # More realistic case using inversion of Modelica:
 #' #  find convection coefficient that gives minimal temperature of 40 degrees.
@@ -132,12 +149,19 @@ RunDesign <- function(model=NULL,input.files,
                       run.control=list(force.retry=2,cache.dir=NULL),
                       monitor.control=list(results.tmp=TRUE,sleep=5,display.fun=NULL),
                       archive.dir=NULL,verbosity=1) {
-    Funz_RunDesign(model=model,input.files=input.files,output.expressions=output.expressions,
+    return(Funz_RunDesign(model=model,input.files=input.files,output.expressions=output.expressions,
                    design=design,input.variables=input.variables,design.options=design.options,
                                run.control=run.control,monitor.control=monitor.control,
-                               archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE)
+                               archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE))
 }
 
+#' Get last Funz RunDesign(...) call
+#'
+#' @return last Funz RunDesign(...) call
+#' @export
+.Last.rundesign <- function() {
+    return(.Funz.Last.rundesign)
+}
 
 #' Convenience method to find variables & related info. in parametrized file.
 #'
@@ -150,7 +174,7 @@ RunDesign <- function(model=NULL,input.files,
 #' ParseInput(model = "R",
 #'            input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"))
 ParseInput <- function(model,input.files) {
-    Funz_ParseInput(model=model,input.files=input.files)
+    return(Funz_ParseInput(model=model,input.files=input.files))
 }
 
 #' Convenience method to compile variables in parametrized file.
@@ -169,7 +193,7 @@ ParseInput <- function(model,input.files) {
 #'              input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'              input.values = list(x1=c(0.5,.55), b=c(0.6,.7)))
 CompileInput <- function(model,input.files,input.values,output.dir=".") {
-    Funz_CompileInput(model=model,input.files=input.files,input.values=input.values,output.dir=output.dir)
+    return(Funz_CompileInput(model=model,input.files=input.files,input.values=input.values,output.dir=output.dir))
 }
 
 #' Convenience method to find variables & related info. in parametrized file.
@@ -185,5 +209,5 @@ CompileInput <- function(model,input.files,input.values,output.dir=".") {
 #' ReadOutput(model = "R", input.files = "branin.R",output.dir=".")
 #' }
 ReadOutput <- function(model, input.files, output.dir) {
-    Funz_ReadOutput(model=model, input.files=input.files, output.dir=output.dir)
+    return(Funz_ReadOutput(model=model, input.files=input.files, output.dir=output.dir))
 }
