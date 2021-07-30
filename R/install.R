@@ -113,6 +113,7 @@ setup.Model <- function(model) {
     } else {
       writeLines(paste0("#!/bin/bash\n\n# Fill this file to launch ",model,"\n# First argument will be the main file"),
                  file(script))
+    }
 
   message("The script used to launch ",model," is now opened in the editor.")
   utils::file.edit(script)

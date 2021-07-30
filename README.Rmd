@@ -1,0 +1,74 @@
+---
+title: "Funz from R"
+author: "Y. Richet"
+date: "30/07/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+## Install
+
+```{r setup}
+if (!("Funz" %in% installed.packages()))
+    install.packages("Funz")
+
+library(Funz)
+```
+
+## Usage: Funz from R console
+
+Once installed, Funz library allows to access almost all features of Funz through command line:
+
+#### Starting calculations backend
+
+First requirement: launch calculation backend which wwill be used by parametric modelling command, later.
+
+Note: it is also possible to start this backend on another computer, which will be usable by all computer which IP is declared in 'calculator.xml' file (by default just contains "127.0.0.1" local address).
+
+```{r}
+# This will start 5 calculators, in background
+calcs = startCalculators(5)
+```
+
+You can check all available calculators from your computer using:
+```{r}
+Grid()
+```
+
+
+### Parametric modelling
+
+Once calculators are available, you can launch a parametric model using a parametrized file (here a R function used as the model):
+```{r}
+Run(model = "R",
+   input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
+   input.variables = list(x1=seq(0,1,by=0.2),x2=seq(0,1,by=0.2)),
+   all.combinations=TRUE,
+   output.expressions = "z")
+```
+
+... and then plot results using the '.Funz.Last.run' global variable:
+```{r}
+# Response surface of previous Run
+persp(z=matrix(unlist(.Funz.Last.run$results$z),nrow=11),zlab="z")
+```
+
+
+
+### Applying algorithm on function
+
+### Applying algorithm on parametric modelling
+
+
+```{r}
+# This will stop the 5 calculators started
+stopCalculators(calcs)
+```
+## Install plugins
+
+### Install new model
+
+### Install new algorithm
+
+## ...
