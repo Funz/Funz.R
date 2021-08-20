@@ -7,8 +7,6 @@ output:
   html_document: default
 ---
 
-## Install
-
 ```{r setup}
 # requirements
 libs = c("jsonlite","scatterplot3d")
@@ -16,7 +14,13 @@ for (l in libs) {
   if (!(l %in% installed.packages()))
     install.packages(l)
 }
+```
 
+
+## Install
+
+Just use the standard 'install.packages("Funz")' command:
+```{r setup}
 # install Funz if needed
 if (!("Funz" %in% installed.packages()))
     install.packages("Funz")
@@ -27,7 +31,7 @@ install.Design("GradientDescent") # required for later example
 
 ## Usage: Funz from R console
 
-Once installed, Funz library allows to access almost all features of Funz through command line.
+Once installed, Funz R package allows to access almost all features of Funz through command line.
 
 #### Starting calculations back-end
 
@@ -48,7 +52,7 @@ Grid()
 
 ### Parametric modelling
 
-This main feature of Funz allows to evaluate a parametric model, built from parametrized files (like following 'branin.R' file including variables starting with a reserved character '?'):
+This main feature of Funz allows to evaluate a parametric model, built from parameterized files (like following 'branin.R' file including variables starting with a reserved character '?'):
 ```{r echo=F, comment=''}
 cat(readLines(file.path(Funz:::FUNZ_HOME,"samples","branin.R")), sep = '\n')
 ```
