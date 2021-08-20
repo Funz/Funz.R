@@ -9,7 +9,7 @@ output:
 
 ```{r setup}
 # requirements
-libs = c("jsonlite","scatterplot3d")
+libs = c("jsonlite","scatterplot3d", "devtools")
 for (l in libs) {
   if (!(l %in% installed.packages()))
     install.packages(l)
@@ -23,7 +23,7 @@ Just use the standard 'install.packages("Funz")' command:
 ```{r setup}
 # install Funz if needed
 if (!("Funz" %in% installed.packages()))
-    install.packages("Funz")
+    devtools::install_github("Funz/Funz.R")
 
 library(Funz)
 install.Design("GradientDescent") # required for later example
