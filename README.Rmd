@@ -7,6 +7,8 @@ output:
   html_document: default
 ---
 
+## Install
+
 ```{r setup}
 # requirements
 libs = c("jsonlite","scatterplot3d")
@@ -14,12 +16,7 @@ for (l in libs) {
   if (!(l %in% installed.packages()))
     install.packages(l)
 }
-```
 
-## Install
-
-Just use the standard 'install.packages("Funz")' command:
-```{r setup}
 # install Funz if needed
 if (!("Funz" %in% installed.packages()))
     install.packages("Funz")
@@ -83,6 +80,7 @@ persp(z=matrix(unlist(r$z),nrow=sqrt(length(unlist(r$z))),byrow = F),xlab="x1",y
 ### Applying algorithm on function
 
 The other main feature of Funz consists in applying an algorithm/analysis on a function:
+
 ```{r results=F}
 branin <- function(x) {
 	x1 <- x[,1]*15-5   
@@ -96,6 +94,7 @@ Design(fun = branin,
 ```
 
 which solves the targeted issue (here an optimization):
+
 ```{r}
 x = seq(0,1,,41)
 contour(x,x,matrix(branin(expand.grid(x,x)),ncol=length(x)),nlevels = 31,xlab="x1",ylab="x2")
@@ -109,6 +108,7 @@ points(argmin[1],argmin[2],col='red')
 ### Applying algorithm on parametric modelling
 
 These two main features may also be coupled to apply an algorithm directly on the parametric model:
+
 ```{r results=F}
 RunDesign(model = "R",
           input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
@@ -118,6 +118,7 @@ RunDesign(model = "R",
 ```
 
 ... and returns the algorithm analysis:
+
 ```{r}
 x = seq(0,1,,41)
 xx = expand.grid(x,x)
@@ -156,43 +157,52 @@ Such a plugin is a 'zip' file, which may be installed locally, or directly from 
 ### Install new model
 
 Get already installed models:
+
 ```{r}
 installed.Models()
 ```
 
 Get available models from GitHub:
+
 ```{r}
 available.Models()
 ```
 
 Install a new model from GitHub:
+
 ```{r}
 install.Model("Modelica")
 ```
 
 ... or from a local file:
+
 ```{r eval=F}
 install_file.Model("plugin-Modelica.zip")
 ```
 
 ### Install new algorithm
 
+
 Get already installed models:
+
 ```{r}
 installed.Designs()
 ```
 
 Get available models from GitHub:
+
 ```{r}
 available.Designs()
 ```
 
 Install a new model from GitHub:
+
 ```{r}
 install.Design("Brent")
 ```
 
 ... or from a local file:
+
 ```{r eval=F}
 install_file.Design("algorthm-Brent.zip")
 ```
