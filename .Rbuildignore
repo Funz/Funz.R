@@ -3,7 +3,6 @@
 LICENSE
 ^.*\.png$
 ^.*\.Rmd$
-^.*\.xml$
 ^.*\.Rdata$
 ^.*=.*$
 report.*$
