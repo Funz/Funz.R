@@ -30,5 +30,4 @@ jobs:
     - run: Rscript -e 'library("Funz"); install.Design("GradientDescent"); startCalculators(5); RunDesign(model="R",input.files=file.path(Funz:::FUNZ_HOME,"samples","branin.R"),output.expressions="cat", design = "GradientDescent",design.options = list(max_iterations=10),input.variables = list(x1="[0,1]",x2="[0,1]")); stopCalculators(calcs)' > RunDesign.Rout
     - uses: actions/upload-artifact@v2
       with:
-        path: *.Rout
-        
+        path: ./*.Rout
