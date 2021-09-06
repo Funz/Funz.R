@@ -14,6 +14,8 @@ jobs:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         R: [3.6, 4.0, 4.1]
     runs-on: ${{ matrix.os }}
+    env:
+      GITHUB_PAT: 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
     steps:
     - uses: r-lib/actions/setup-r@v1
       with:
@@ -22,7 +24,7 @@ jobs:
       run: brew install automake
     - if: matrix.os == 'macos-latest' && matrix.R == '3.6'
       run: ln -s /Library/Frameworks/R.framework/Versions/3.6 /Library/Frameworks/R.framework/Versions/3.5
-    - run: Rscript -e 'Sys.setenv(GITHUB_PAT="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"); install.packages("devtools"); devtools::install_github("Funz/Funz.R")' > install.Rout
+    - run: Rscript -e 'install.packages("devtools"); devtools::install_github("Funz/Funz.R")' > install.Rout
     - run: Rscript -e 'library("Funz"); calcs = startCalculators(5); Run(model = "R",input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),input.variables = list(x1=seq(0,1,by=0.1),x2=seq(0,1,by=0.1)),all.combinations=TRUE,output.expressions = "z"); stopCalculators(calcs)' > Run.Rout
     - run: Rscript -e 'library("Funz"); install.Design("GradientDescent"); Design(fun = function(X){abs(X$x1*X$x2)}, design = "GradientDescent", options = list(max_iterations=10),input.variables = list(x1="[0,1]",x2="[1,2]"))' > Design.Rout
     - run: Rscript -e 'library("Funz"); install.Design("GradientDescent"); startCalculators(5); RunDesign(model="R",input.files=file.path(Funz:::FUNZ_HOME,"samples","branin.R"),output.expressions="cat", design = "GradientDescent",design.options = list(max_iterations=10),input.variables = list(x1="[0,1]",x2="[0,1]")); stopCalculators(calcs)' > RunDesign.Rout
