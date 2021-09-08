@@ -49,5 +49,6 @@ jobs:
     - run: Rscript -e "library('Funz'); RunDesign(model='R',input.files=file.path(Funz:::FUNZ_HOME,'samples','branin.R'),output.expressions='cat', design = 'GradientDescent',design.options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[0,1]'))" > ${{ matrix.os }}-R${{ matrix.R }}/RunDesign.Rout
       shell: bash
     - uses: actions/upload-artifact@v2
+      if: ${{ always() }}
       with:
         path: ./${{ matrix.os }}-R${{ matrix.R }}
