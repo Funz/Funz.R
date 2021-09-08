@@ -40,7 +40,7 @@ jobs:
         Rscript -e "library('devtools'); install_github('Funz/Funz.R',INSTALL_opts=c('--no-multiarch'))" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
         Rscript -e "library(Funz); install.Design('GradientDescent')" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout
       shell: bash
-    - run: Rscript -e "library('Funz'); calcs = startCalculators(5);" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout
+    - run: Rscript -e "library('Funz'); calcs = startCalculators(5);" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout &
       shell: bash    
     - run: Rscript -e "library('Funz'); Run(model = 'R',input.files = file.path(Funz:::FUNZ_HOME,'samples','branin.R'),input.variables = list(x1=seq(0,1,by=0.1),x2=seq(0,1,by=0.1)),all.combinations=TRUE,output.expressions = 'z')" > ${{ matrix.os }}-R${{ matrix.R }}/Run.Rout
       shell: bash
@@ -51,4 +51,4 @@ jobs:
     - uses: actions/upload-artifact@v2
       if: ${{ always() }}
       with:
-        path: ./${{ matrix.os }}-R${{ matrix.R }}
+        path: ./${{ matrix.os }}-*
