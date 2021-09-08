@@ -37,7 +37,7 @@ jobs:
       run: sudo apt install -y libcurl4-openssl-dev
     - run: |
         Rscript -e "install.packages('devtools',repos='https://cloud.r-project.org')"; \
-        Rscript -e "devtools::install_github('Funz/Funz.R',INSTALL_opts=c('--no-multiarch'))" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
+        Rscript -e "library('devtools'); install_github('Funz/Funz.R',INSTALL_opts=c('--no-multiarch'))" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
         Rscript -e "library(Funz); install.Design('GradientDescent')" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout
       shell: bash
     - run: Rscript -e "library('Funz'); calcs = startCalculators(5);" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout
