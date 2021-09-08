@@ -25,22 +25,29 @@ jobs:
     - uses: r-lib/actions/setup-r@v1
       with:
         r-version: ${{ matrix.R }}
+    - run: mkdir ${{ matrix.os }}-R${{ matrix.R }}
+      shell: bash     
     - if: matrix.os == 'macos-latest'
       run: brew install automake
     - if: matrix.os == 'macos-latest' && matrix.R == '3.6'
       run: ln -s /Library/Frameworks/R.framework/Versions/3.6 /Library/Frameworks/R.framework/Versions/3.5
     - if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
-      run: sudo R CMD javareconf  
+      run: sudo R CMD javareconf 
     - if: matrix.os == 'ubuntu-latest' 
       run: sudo apt install -y libcurl4-openssl-dev
-    - run: Rscript -e "install.packages('devtools',repos='https://cloud.r-project.org'); devtools::install_github('Funz/Funz.R',INSTALL_opts=c('--no-multiarch'))" > install.Rout
+    - run: |
+        Rscript -e "install.packages('devtools',repos='https://cloud.r-project.org')"; \
+        Rscript -e "devtools::install_github('Funz/Funz.R',INSTALL_opts=c('--no-multiarch'))" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
+        Rscript -e "library(Funz); install.Design('GradientDescent')" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout
       shell: bash
-    - run: Rscript -e "library('Funz'); calcs = startCalculators(5); Sys.sleep(5); Run(model = 'R',input.files = file.path(Funz:::FUNZ_HOME,'samples','branin.R'),input.variables = list(x1=seq(0,1,by=0.1),x2=seq(0,1,by=0.1)),all.combinations=TRUE,output.expressions = 'z'); stopCalculators(calcs)" > Run.Rout
+    - run: Rscript -e "library('Funz'); calcs = startCalculators(5);" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout
+      shell: bash    
+    - run: Rscript -e "library('Funz'); Run(model = 'R',input.files = file.path(Funz:::FUNZ_HOME,'samples','branin.R'),input.variables = list(x1=seq(0,1,by=0.1),x2=seq(0,1,by=0.1)),all.combinations=TRUE,output.expressions = 'z')" > ${{ matrix.os }}-R${{ matrix.R }}/Run.Rout
       shell: bash
-    - run: Rscript -e "library('Funz'); install.Design('GradientDescent'); Design(fun = function(X){colnames(X)=c('x1','x2');print(X);abs(X$x1*X$x2)}, design = 'GradientDescent', options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[1,2]'))" > Design.Rout
+    - run: Rscript -e "library('Funz'); Design(fun = function(X){colnames(X)=c('x1','x2');print(X);abs(X$x1*X$x2)}, design = 'GradientDescent', options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[1,2]'))" > ${{ matrix.os }}-R${{ matrix.R }}/Design.Rout
       shell: bash
-    - run: Rscript -e "library('Funz'); install.Design('GradientDescent'); startCalculators(5); Sys.sleep(5); RunDesign(model='R',input.files=file.path(Funz:::FUNZ_HOME,'samples','branin.R'),output.expressions='cat', design = 'GradientDescent',design.options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[0,1]')); stopCalculators(calcs)" > RunDesign.Rout
+    - run: Rscript -e "library('Funz'); RunDesign(model='R',input.files=file.path(Funz:::FUNZ_HOME,'samples','branin.R'),output.expressions='cat', design = 'GradientDescent',design.options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[0,1]'))" > ${{ matrix.os }}-R${{ matrix.R }}/RunDesign.Rout
       shell: bash
     - uses: actions/upload-artifact@v2
       with:
-        path: ./*.Rout
+        path: ./${{ matrix.os }}-R${{ matrix.R }}
