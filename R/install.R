@@ -28,6 +28,7 @@
 }
 
 .github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
+if (length(.github_repos)==0) .github_repos <- NA
 
 ############################ Models #################################
 
@@ -52,7 +53,7 @@ installed.Models <- function() {
 #' @examples
 #' available.Models()
 available.Models <- function(refresh_repo = F) {
-  if (refresh_repo)
+  if (refresh_repo | is.na(.github_repos))
     .github_repos <<- gh::gh("/orgs/Funz/repos",.token=NA)
 
   gsub("plugin-","",
@@ -229,7 +230,7 @@ installed.Designs <- function() {
 #' @examples
 #' available.Designs()
 available.Designs <- function(refresh_repo = F) {
-  if (refresh_repo)
+  if (refresh_repo | is.na(.github_repos))
     .github_repos <<- gh::gh("/orgs/Funz/repos",.token=NA)
 
   gsub("algorithm-","",
