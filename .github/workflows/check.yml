@@ -17,9 +17,13 @@ jobs:
         include:
         - os: windows-2022
           r-version: devel-ucrt
+    env:
+      - debian-deps: libssl-dev libcurl4-openssl-dev
+      - macos-deps: openssl-1.1.1h
+      - windows-deps: openssl
 
     runs-on: ${{ matrix.os }}
-    name: ${{ matrix.os }}-R${{ matrix.r-version }}
+    name: ${{ runner.os }}-R${{ matrix.r-version }}
 
     steps:
       - uses: actions/checkout@v2
@@ -39,6 +43,45 @@ jobs:
         uses: kalibera/ucrt3/actions/toolchain-install@main
         with:
           toolchain-type: base
+
+      # From https://github.com/s-u/R-actions/blob/master/pkg-check/action.yml
+      - name: Install Linux dependencies
+        if: ${{ runner.os == 'Linux' && env.debian-deps != '' }}
+        run: |
+            echo "::group::Install Linux system dependencies"
+            sudo apt-get install -y ${{ env.debian-deps }}
+            echo '::endgroup::'
+        shell: bash
+      - name: Install macOS dependencies
+        if: ${{ runner.os == 'macOS' && env.macos-deps != '' }}
+        run: |
+            echo "::group::Install macOS system dependencies"
+            for i in ${{ env.macos-deps }}; do
+              echo -n "  $i"
+              curl -s https://mac.r-project.org/libs-4/$i-darwin.17-x86_64.tar.gz | sudo tar fxz - --strip 2 -C /usr/local
+            done
+            echo ''
+            echo '::endgroup::'
+        shell: bash
+      - name: Install Windows dependencies
+        if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
+        run: |
+          echo "::group::Install Windows system dependencies"
+          if which pacman 2>/dev/null; then
+            pacman -Sy
+            for i in ${{ env.windows-deps }}; do
+              pacman --sync --noconfirm mingw-w64-i686-$i mingw-w64-x86_64-$i
+            done
+          else
+            echo "NOTE: pacman not found, assuming UCRT toolchain which already contains dependencies"
+            echo "      see https://github.com/kalibera/ucrt3 for corresponding action"
+          fi
+          echo ''
+          echo '::endgroup::'
+        shell: bash
+
+      - if: ${{ runner.os != 'Windows' }}
+        run: R CMD javareconf # ensure rJava will install later
 
       - run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
       - uses: s-u/R-actions/pkg-check@master
