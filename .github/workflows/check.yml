@@ -18,9 +18,9 @@ jobs:
         - os: windows-2022
           r-version: devel-ucrt
     env:
-      - debian-deps: libssl-dev libcurl4-openssl-dev
-      - macos-deps: openssl-1.1.1h
-      - windows-deps: openssl
+      debian-deps: libssl-dev libcurl4-openssl-dev
+      macos-deps: openssl-1.1.1h
+      windows-deps: openssl
 
     runs-on: ${{ matrix.os }}
     name: ${{ runner.os }}-R${{ matrix.r-version }}
@@ -84,6 +84,7 @@ jobs:
         run: R CMD javareconf # ensure rJava will install later
 
       - run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
+
       - uses: s-u/R-actions/pkg-check@master
         with:
           check-flags: --as-cran
