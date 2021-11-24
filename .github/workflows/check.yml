@@ -66,22 +66,29 @@ jobs:
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
-          echo "::group::Install Windows system dependencies"
-          if which pacman 2>/dev/null; then
-            pacman -Sy
-            for i in ${{ env.windows-deps }}; do
-              pacman --sync --noconfirm mingw-w64-i686-$i mingw-w64-x86_64-$i
-            done
-          else
-            echo "NOTE: pacman not found, assuming UCRT toolchain which already contains dependencies"
-            echo "      see https://github.com/kalibera/ucrt3 for corresponding action"
-          fi
-          echo ''
-          echo '::endgroup::'
+            choco install msys2 --params "/NoUpdate"
+            echo "::add-path::C:\\tools\\msys64\\usr\\bin"
+            echo "::add-path::C:\\tools\\msys64\\mingw64\\bin"
+            echo "::set-env name=PKG_CONFIG_PATH::/mingw64/lib/pkgconfig"
+            pacman -Sy --noconfirm pacman
+            pacman -S --noconfirm pacman-mirrors pkg-config
+            pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain mingw-w64-x86_64-openssl upx
+            echo "::group::Install Windows system dependencies"
+            if which pacman 2>/dev/null; then
+              pacman -Sy
+              for i in ${{ env.windows-deps }}; do
+                pacman --sync --noconfirm mingw-w64-i686-$i mingw-w64-x86_64-$i
+              done
+            else
+              echo "NOTE: pacman not found, assuming UCRT toolchain which already contains dependencies"
+              echo "      see https://github.com/kalibera/ucrt3 for corresponding action"
+            fi
+            echo ''
+            echo '::endgroup::'
         shell: bash
 
       - if: ${{ runner.os != 'Windows' }}
-        run: R CMD javareconf # ensure rJava will install later
+        run: sudo R CMD javareconf # ensure rJava will install later
 
       - run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
 
