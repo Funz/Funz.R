@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+: "${R_HOME=`R RHOME`}"
+echo "R.home=${R_HOME}" >> inst/Funz/Funz.conf

@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+echo "R.home=${R_HOME}" >> inst/Funz/Funz.conf

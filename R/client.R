@@ -49,12 +49,12 @@ Run <- function(model=NULL,input.files,
 }
 
 
-#' Get last Funz Run(...) call
+#' Get last Funz Run() call
 #'
-#' @return last Funz Run(...) call
+#' @return last Funz Run() call
 #' @export
 .Last.run <- function() {
-    return(.Funz.Last.run)
+    return(.env$.Funz.Last.run)
 }
 
 #' Apply a design of experiments through Funz environment on a response surface.
@@ -94,12 +94,12 @@ Design <- function(fun, design, options=NULL,
                 archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE,...))
 }
 
-#' Get last Funz Design(...) call
+#' Get last Funz Design() call
 #'
-#' @return last Funz Design(...) call
+#' @return last Funz Design() call
 #' @export
 .Last.design <- function() {
-    return(.Funz.Last.design)
+    return(.env$.Funz.Last.design)
 }
 
 #' Call an external (to R) code wrapped through Funz environment.
@@ -160,7 +160,7 @@ RunDesign <- function(model=NULL,input.files,
 #' @return last Funz RunDesign(...) call
 #' @export
 .Last.rundesign <- function() {
-    return(.Funz.Last.rundesign)
+    return(.env$.Funz.Last.rundesign)
 }
 
 #' Convenience method to find variables & related info. in parametrized file.
@@ -171,8 +171,10 @@ RunDesign <- function(model=NULL,input.files,
 #' @return list of variables & their possible default value
 #' @export
 #' @examples
+#' \dontrun{
 #' ParseInput(model = "R",
 #'            input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"))
+#' }
 ParseInput <- function(model,input.files) {
     return(Funz_ParseInput(model=model,input.files=input.files))
 }
@@ -186,12 +188,14 @@ ParseInput <- function(model,input.files) {
 #'
 #' @export
 #' @examples
+#' \dontrun{
 #' CompileInput(model = "R",
 #'              input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'              input.values = list(x1=0.5, x2=0.6))
 #' CompileInput(model = "R",
 #'              input.files = file.path(Funz:::FUNZ_HOME,"samples","branin.R"),
 #'              input.values = list(x1=c(0.5,.55), b=c(0.6,.7)))
+#' }
 CompileInput <- function(model,input.files,input.values,output.dir=".") {
     return(Funz_CompileInput(model=model,input.files=input.files,input.values=input.values,output.dir=output.dir))
 }

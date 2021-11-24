@@ -1,20 +1,12 @@
 .onLoad <- function(libname, pkgname) {
-  gv = c(".jclassFunz", ".jclassFile", ".jclassData", ".jclassFormat", ".jclassPrint",
-         ".jclassDesignShell", ".jclassRunShell", ".jclassShell", ".jclassLinkedHashMap",
-         ".jclassHashMap", ".jclassConstants", ".jclassSystem", ".jclassUtils",".jclassSystem",
-         ".FUNZ_HOME")
-  utils::globalVariables(gv,package = pkgname)
-  for (v in gv)
-    assign(v, NULL, envir = parent.env(environment()))
   assign("FUNZ_HOME",system.file("Funz", package = "Funz"), envir = parent.env(environment()))
-
   source(file.path(FUNZ_HOME,"Funz.R"),local=parent.env(environment()))
   Funz.init(FUNZ_HOME,
             verbosity=0,
             java.control=if (Sys.info()[['sysname']]=="Windows")
-                           list(Xmx="512m",Xss="256k", app.user=tempdir())
+                           list(Xmx="512m", Xss="256k", app.user=tempdir(), USE_RSERVE_FROM_CRAN="true")
                          else
-                           list(Xmx="512m",            app.user=tempdir()))
+                           list(Xmx="512m",             app.user=tempdir(), USE_RSERVE_FROM_CRAN="true"))
 }
 
 
@@ -39,7 +31,7 @@ if (length(.github_repos)==0) .github_repos <- NA
 #' @examples
 #' installed.Models()
 installed.Models <- function() {
-  .jclassFunz$getModelList()
+  .env$.jclassFunz$getModelList()
 }
 
 
@@ -53,8 +45,8 @@ installed.Models <- function() {
 #' @examples
 #' available.Models()
 available.Models <- function(refresh_repo = F) {
-  if (refresh_repo | is.na(.github_repos))
-    .github_repos <<- gh::gh("/orgs/Funz/repos",.token=NA)
+  if (refresh_repo | any(is.na(.github_repos)))
+      .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
 
   gsub("plugin-","",
        unlist(lapply(.github_repos,
@@ -76,14 +68,14 @@ install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plu
       warning("Model ",model," was already installed. Skipping new installation.")
       return()
     } else
-      message("Model ",model," was already installed. Forcing new installation...")
+      message("Model ",model," was already installed. Forcing new installation..")
 
   utils::unzip(zipfile=model.zip, exdir=FUNZ_HOME,...)
 
   eval({
-    .jclassFunz$init()
-    .Funz.Models <<- installed.Models()
-    .Funz.Designs <<- installed.Designs()
+    .env$.jclassFunz$init()
+    .env$.Funz.Models <- installed.Models()
+    .env$.Funz.Designs <- installed.Designs()
   }) # reload plugins in Funz env
   if (!(model %in% installed.Models()))
     stop("Could not install model ",model , " from ",model.zip)
@@ -217,7 +209,7 @@ install.Model <- function(model,force=F) {
 #' @examples
 #' installed.Designs()
 installed.Designs <- function() {
-  .jclassFunz$getDesignList()
+  .env$.jclassFunz$getDesignList()
 }
 
 #' List available designs from Funz GitHub repository
@@ -230,8 +222,8 @@ installed.Designs <- function() {
 #' @examples
 #' available.Designs()
 available.Designs <- function(refresh_repo = F) {
-  if (refresh_repo | is.na(.github_repos))
-    .github_repos <<- gh::gh("/orgs/Funz/repos",.token=NA)
+  if (refresh_repo | any(is.na(.github_repos)))
+    .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
 
   gsub("algorithm-","",
        unlist(lapply(.github_repos,
@@ -262,9 +254,9 @@ install_file.Design <- function(design.zip, design=gsub(".zip(.*)","",gsub("(.*)
   utils::unzip(zipfile=design.zip, exdir=FUNZ_HOME,...)
 
   eval({
-    .jclassFunz$init()
-    .Funz.Models <<- installed.Models()
-    .Funz.Designs <<- installed.Designs()
+    .env$.jclassFunz$init()
+    .env$.Funz.Models <- installed.Models()
+    .env$.Funz.Designs <- installed.Designs()
   }) # reload plugins in Funz env
   if (!(design %in% installed.Designs()))
     stop("Could not install design ",design , " from ",design.zip)
