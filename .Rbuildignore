@@ -7,3 +7,4 @@ LICENSE
 ^.*=.*$
 report.*$
 cran-comments.md
+^\.git.*
