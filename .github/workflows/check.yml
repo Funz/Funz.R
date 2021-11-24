@@ -23,7 +23,7 @@ jobs:
       windows-deps: openssl
 
     runs-on: ${{ matrix.os }}
-    name: ${{ runner.os }}-R${{ matrix.r-version }}
+    name: ${{ matrix.os }}-R${{ matrix.r-version }}
 
     steps:
       - uses: actions/checkout@v2
