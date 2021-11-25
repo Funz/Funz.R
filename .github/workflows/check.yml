@@ -59,7 +59,7 @@ jobs:
             echo "::group::Install Windows system dependencies"
             for i in ${{ env.windows-deps }}; do
               echo -n "  $i"
-              choco install -y $i
+              choco install --no-progress -y $i
             done
             echo ''
             echo '::endgroup::'
