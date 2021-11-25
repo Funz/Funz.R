@@ -28,7 +28,7 @@ jobs:
 
       - uses: actions/setup-java@v1
         with:
-          java-version: 8
+          java-version: 11
 
       - uses: r-lib/actions/setup-r@v1
         with:
@@ -66,7 +66,7 @@ jobs:
         shell: bash
 
       - if: ${{ runner.os != 'Windows' }}
-        run: sudo R CMD javareconf
+        run: R CMD -e javareconf
 
       - run: Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" -e "remotes::install_deps(dependencies = TRUE)"
 
@@ -82,4 +82,4 @@ jobs:
 
       - uses: s-u/R-actions/pkg-check@master
         with:
-          check-flags: --as-cran
+          check-flags: --as-cran --no-multiarch
