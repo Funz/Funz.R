@@ -30,6 +30,10 @@ jobs:
         with:
           java-version: 8
 
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.r-version }}
+
       # From https://github.com/s-u/R-actions/blob/master/pkg-check/action.yml
       - name: Install Linux dependencies
         if: ${{ runner.os == 'Linux' && env.debian-deps != '' }}
@@ -64,7 +68,7 @@ jobs:
       - if: ${{ runner.os != 'Windows' }}
         run: sudo R CMD javareconf
 
-      - run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)"
+      - run: sudo Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)"
 
       - if: failure()
         uses: actions/upload-artifact@v2
