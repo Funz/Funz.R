@@ -68,7 +68,7 @@ jobs:
       - if: ${{ runner.os != 'Windows' }}
         run: sudo R CMD javareconf
 
-      - run: sudo Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)"
+      - run: sudo Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" -e "remotes::install_deps(dependencies = TRUE)"
 
       - if: failure()
         uses: actions/upload-artifact@v2
