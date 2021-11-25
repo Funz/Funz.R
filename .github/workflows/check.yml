@@ -52,33 +52,19 @@ jobs:
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
-            choco install msys2 --params "/NoUpdate"
-            echo "C:\\tools\\msys64\\usr\\bin" >> $GITHUB_PATH
-            echo "C:\\tools\\msys64\\mingw64\\bin" >> $GITHUB_PATH
-            echo "PKG_CONFIG_PATH=/mingw64/lib/pkgconfig" >> $GITHUB_ENV
-            pacman -Sy --noconfirm pacman
-            pacman -S --noconfirm pacman-mirrors pkg-config
-            pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain mingw-w64-x86_64-openssl upx
             echo "::group::Install Windows system dependencies"
-            if which pacman 2>/dev/null; then
-              pacman -Sy
-              for i in ${{ env.windows-deps }}; do
-                pacman --sync --noconfirm mingw-w64-i686-$i mingw-w64-x86_64-$i
-              done
-            else
-              echo "NOTE: pacman not found, assuming UCRT toolchain which already contains dependencies"
-              echo "      see https://github.com/kalibera/ucrt3 for corresponding action"
-            fi
+            for i in ${{ env.windows-deps }}; do
+              echo -n "  $i"
+              choco install -y $i
+            done
             echo ''
             echo '::endgroup::'
         shell: bash
 
       - if: ${{ runner.os != 'Windows' }}
-        run: |
-            "bash -c 'java -version && which java && echo $PATH && echo $JAVA_HOME'"
-            "echo export PATH=$PATH > reconf.sh; echo export JAVA_HOME=$JAVA_HOME >> reconf.sh; echo R CMD javareconf >> reconf.sh; sudo bash reconf.sh"
+        run: sudo R CMD javareconf
 
-      - run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
+      - run: Rscript -e "install.packages('remotes')" -e "remotes::install_deps(dependencies = TRUE)"
 
       - if: failure()
         uses: actions/upload-artifact@v2
