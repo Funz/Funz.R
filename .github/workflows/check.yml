@@ -14,9 +14,7 @@ jobs:
       matrix:
         os: [ windows-latest, macOS-latest, ubuntu-latest ]
         r-version: [ 3.6, oldrel, release, devel ]
-        include:
-        - os: windows-2022
-          r-version: devel-ucrt
+
     env:
       debian-deps: libssl-dev libcurl4-openssl-dev
       macos-deps: openssl-1.1.1h
@@ -31,18 +29,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 8
-
-      # r-lib/setup-r doesn't setup UCRT properly (yet)
-      - if: ${{ matrix.r-version != 'devel-ucrt' }}
-        uses: r-lib/actions/setup-r@v1
-        with:
-          r-version: ${{ matrix.r-version }}
-      - if: ${{ runner.os == 'Windows' && matrix.r-version == 'devel-ucrt' }}
-        uses: kalibera/ucrt3/actions/r-install@main
-      - if: ${{ runner.os == 'Windows' && matrix.r-version == 'devel-ucrt' }}
-        uses: kalibera/ucrt3/actions/toolchain-install@main
-        with:
-          toolchain-type: base
 
       # From https://github.com/s-u/R-actions/blob/master/pkg-check/action.yml
       - name: Install Linux dependencies
@@ -67,9 +53,9 @@ jobs:
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
             choco install msys2 --params "/NoUpdate"
-            echo "::add-path::C:\\tools\\msys64\\usr\\bin"
-            echo "::add-path::C:\\tools\\msys64\\mingw64\\bin"
-            echo "::set-env name=PKG_CONFIG_PATH::/mingw64/lib/pkgconfig"
+            echo "C:\\tools\\msys64\\usr\\bin" >> $GITHUB_PATH
+            echo "C:\\tools\\msys64\\mingw64\\bin" >> $GITHUB_PATH
+            echo "PKG_CONFIG_PATH=/mingw64/lib/pkgconfig" >> $GITHUB_ENV
             pacman -Sy --noconfirm pacman
             pacman -S --noconfirm pacman-mirrors pkg-config
             pacman -S --noconfirm --needed base-devel mingw-w64-i686-toolchain mingw-w64-x86_64-toolchain mingw-w64-x86_64-openssl upx
@@ -88,13 +74,11 @@ jobs:
         shell: bash
 
       - if: ${{ runner.os != 'Windows' }}
-        run: sudo R CMD javareconf # ensure rJava will install later
+        run: |
+            "bash -c 'java -version && which java && echo $PATH && echo $JAVA_HOME'"
+            "echo export PATH=$PATH > reconf.sh; echo export JAVA_HOME=$JAVA_HOME >> reconf.sh; echo R CMD javareconf >> reconf.sh; sudo bash reconf.sh"
 
       - run: Rscript -e "install.packages(c('remotes', 'rcmdcheck'))" -e "remotes::install_deps(dependencies = TRUE)"
-
-      - uses: s-u/R-actions/pkg-check@master
-        with:
-          check-flags: --as-cran
 
       - if: failure()
         uses: actions/upload-artifact@v2
@@ -105,3 +89,7 @@ jobs:
             *.log
             *.out
             *.Rout
+
+      - uses: s-u/R-actions/pkg-check@master
+        with:
+          check-flags: --as-cran
