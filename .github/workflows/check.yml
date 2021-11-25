@@ -66,7 +66,7 @@ jobs:
         shell: bash
 
       - if: ${{ runner.os != 'Windows' }}
-        run: R CMD -e javareconf
+        run: R CMD javareconf -e
 
       - run: Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" -e "remotes::install_deps(dependencies = TRUE)"
 
