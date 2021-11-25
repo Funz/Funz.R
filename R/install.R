@@ -1,3 +1,17 @@
+#' @import rJava
+#' @import Rserve
+  if (!("rJava" %in% utils::installed.packages()) || !is.function(rJava::.jinit))
+      stop("rJava package must be installed.")
+  rJava.version = utils::packageDescription('rJava')$Version
+  if (utils::compareVersion(rJava.version, "1.0-0") < 0)
+      stop(paste("rJava version (",rJava.version,") is too old. Please update to >=1.0"))
+
+  if (!("Rserve" %in% utils::installed.packages()) || !is.function(Rserve::Rserve))
+      stop("Rserve package must be installed.")
+  Rserve.version = utils::packageDescription('Rserve')$Version
+  if (utils::compareVersion(Rserve.version, "1.7-5") < 0)
+      stop(paste("Rserve version (",Rserve.version,") is too old. Please update to >=1.7-5 or 1-8"))
+
 .onLoad <- function(libname, pkgname) {
   assign("FUNZ_HOME",system.file("Funz", package = "Funz"), envir = parent.env(environment()))
   source(file.path(FUNZ_HOME,"Funz.R"),local=parent.env(environment()))

@@ -1,6 +1,6 @@
 Package: Funz
 Type: Package
-Title: Funz Parametric Computing Environment
+Title: Parametric Computing Environment
 Version: 1.14-0
 Author: Yann Richet
 Maintainer: Yann Richet <yann.richet@irsn.fr>
@@ -9,7 +9,7 @@ Description: Binding to Funz <https://funz.github.io/> parametric computing envi
 License: Apache License (>= 2)
 Encoding: UTF-8
 LazyData: true
-Imports: rJava (>= 1.0-0), Rserve, xml2, utils, foreach, parallel, processx, gh
+Imports: rJava (>= 1.0-0), Rserve (>= 1.8), xml2, utils, foreach, parallel, processx, gh
 SystemRequirements: Java (>= 8)
 URL: https://github.com/Funz/Funz.R
 RoxygenNote: 7.1.1
