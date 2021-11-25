@@ -69,7 +69,7 @@ jobs:
       - if: ${{ runner.os == 'macOS' }}
         run: echo "/Library/Frameworks/R.framework/Resources/bin/R" >> $GITHUB_PATH
       - if: ${{ runner.os != 'Windows' }}
-        run: R CMD javareconf -e
+        run: sudo R CMD javareconf
         shell: bash
 
       - run: Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" -e "remotes::install_deps(dependencies = TRUE)"
