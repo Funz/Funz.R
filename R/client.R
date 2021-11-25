@@ -10,6 +10,7 @@
 #'   'cache.dir' setup array of directories to search inside before real launching calculations.
 #' @param monitor.control list of monitor parameters: sleep (delay time between two checks of results), display.fun (function to display project cases status).
 #' @param archive.dir define an arbitrary output directory where results (cases, csv files) are stored.
+#' @param out.filter what output(s) to retreive in returned object.
 #' @param verbosity 0-10, print information while running.
 #'
 #' @return list of array results from the code, arrays size being equal to input.variables arrays size.
@@ -41,11 +42,11 @@ Run <- function(model=NULL,input.files,
                 output.expressions=NULL,
                 run.control=list(force.retry=2,cache.dir=NULL),
                 monitor.control=list(sleep=5,display.fun=NULL),
-                archive.dir=NULL,verbosity=1) {
+                archive.dir=NULL,out.filter=NULL,verbosity=1) {
     return(Funz_Run(model=model,input.files=input.files,
              input.variables=input.variables,all.combinations=all.combinations,output.expressions=output.expressions,
              run.control=run.control,monitor.control=monitor.control,
-             archive.dir=archive.dir,verbosity=verbosity,log.file=F))
+             archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=F))
 }
 
 
@@ -70,6 +71,7 @@ Run <- function(model=NULL,input.files,
 #'   'foreach.options optional parameters to pass to the foreach DoPar. Should include anything needed for 'fun' evaluation.
 #' @param monitor.control list of control parameters: 'results.tmp' list of design results to display at each batch. TRUE means "all", NULL/FALSE means "none".
 #' @param archive.dir define an arbitrary output directory where results (log, images) are stored.
+#' @param out.filter what output(s) to retreive in returned object.
 #' @param verbosity print (lot of) information while running.
 #' @param ... optional parameters passed to 'fun'
 #'
@@ -87,11 +89,11 @@ Design <- function(fun, design, options=NULL,
                    input.variables,
                    fun.control=list(cache=FALSE,vectorize="fun",vectorize.by=1,foreach.options=NULL),
                    monitor.control=list(results.tmp=TRUE),
-                   archive.dir=NULL,verbosity=1,...) {
+                   archive.dir=NULL,out.filter=NULL,verbosity=1,...) {
     return(Funz_Design(fun=fun,design=design,options=options,
                 input.variables=input.variables,
                 fun.control=fun.control,monitor.control=monitor.control,
-                archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE,...))
+                archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=FALSE,...))
 }
 
 #' Get last Funz Design() call
@@ -115,6 +117,7 @@ Design <- function(fun, design, options=NULL,
 #'   'cache.dir' setup array of directories to search inside before real launching calculations.
 #' @param monitor.control list of monitor parameters: sleep (delay time between two checks of results), display.fun (function to display project cases status).
 #' @param archive.dir define an arbitrary output directory where results (cases, csv files) are stored.
+#' @param out.filter what output(s) to retreive in returned object.
 #' @param verbosity 0-10, print information while running.
 #'
 #' @return list of array design and results from the code.
@@ -148,11 +151,11 @@ RunDesign <- function(model=NULL,input.files,
                       design=NULL,design.options=NULL,
                       run.control=list(force.retry=2,cache.dir=NULL),
                       monitor.control=list(results.tmp=TRUE,sleep=5,display.fun=NULL),
-                      archive.dir=NULL,verbosity=1) {
+                      archive.dir=NULL,out.filter=NULL,verbosity=1) {
     return(Funz_RunDesign(model=model,input.files=input.files,output.expressions=output.expressions,
                    design=design,input.variables=input.variables,design.options=design.options,
                                run.control=run.control,monitor.control=monitor.control,
-                               archive.dir=archive.dir,verbosity=verbosity,log.file=FALSE))
+                               archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=FALSE))
 }
 
 #' Get last Funz RunDesign(...) call
