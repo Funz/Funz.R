@@ -30,7 +30,9 @@ jobs:
     - if: matrix.os == 'macos-latest'
       run: brew install automake
     - if: matrix.os == 'macos-latest' && matrix.R == '3.6'
-      run: ln -s /Library/Frameworks/R.framework/Versions/3.6 /Library/Frameworks/R.framework/Versions/3.5
+      run: |
+        ln -s /Library/Frameworks/R.framework/Versions/3.6 /Library/Frameworks/R.framework/Versions/3.5
+        echo "/Library/Frameworks/R.framework/Resources/bin" >> $GITHUB_PATH
     - if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: sudo R CMD javareconf 
     - if: matrix.os == 'ubuntu-latest' 
