@@ -2,27 +2,32 @@
 #' @import Rserve
   if (!("rJava" %in% utils::installed.packages()) || !is.function(rJava::.jinit))
       stop("rJava package must be installed.")
-  rJava.version = utils::packageDescription('rJava')$Version
-  if (utils::compareVersion(rJava.version, "1.0-0") < 0)
-      stop(paste("rJava version (",rJava.version,") is too old. Please update to >=1.0"))
+#  rJava.version = utils::packageDescription('rJava')$Version
+#  if (utils::compareVersion(rJava.version, "1.0-0") < 0)
+#      stop(paste("rJava version (",rJava.version,") is too old. Please update to >=1.0"))
 
   if (!("Rserve" %in% utils::installed.packages()) || !is.function(Rserve::Rserve))
       stop("Rserve package must be installed.")
-  Rserve.version = utils::packageDescription('Rserve')$Version
-  if (utils::compareVersion(Rserve.version, "1.7-5") < 0)
-      stop(paste("Rserve version (",Rserve.version,") is too old. Please update to >=1.7-5 or 1-8"))
+#  Rserve.version = utils::packageDescription('Rserve')$Version
+#  if (utils::compareVersion(Rserve.version, "1.7-5") < 0)
+#      stop(paste("Rserve version (",Rserve.version,") is too old. Please update to >=1.7-5 or 1-8"))
 
 .onLoad <- function(libname, pkgname) {
   assign("FUNZ_HOME",system.file("Funz", package = "Funz"), envir = parent.env(environment()))
   source(file.path(FUNZ_HOME,"Funz.R"),local=parent.env(environment()))
+}
+
+.onAttach <- function(libname, pkgname) {
   Funz.init(FUNZ_HOME,
             verbosity=0,
             java.control=if (Sys.info()[['sysname']]=="Windows")
                            list(Xmx="512m", Xss="256k", app.user=tempdir(), USE_RSERVE_FROM_CRAN="true")
                          else
                            list(Xmx="512m",             app.user=tempdir(), USE_RSERVE_FROM_CRAN="true"))
-}
 
+  # That should cleanup remaining Funz processes (incl. Rserve)
+  reg.finalizer(.env, function(x){try(x$.jclassFunz$end())}, onexit = TRUE)
+}
 
 .github_pattern <- "https://github.com/Funz/__TYPE__-__MODEL__/releases/download/v__MAJOR__-__MINOR__/__TYPE__-__MODEL__.zip"
 .github_release <- function(type,model,major,minor) {
