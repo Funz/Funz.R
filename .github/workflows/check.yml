@@ -67,7 +67,7 @@ jobs:
         shell: bash
 
       - if: ${{ runner.os == 'macOS' }}
-        run: echo "/Library/Frameworks/R.framework/Resources/bin/R" >> $GITHUB_PATH
+        run: echo "/Library/Frameworks/R.framework/Resources/bin" >> $GITHUB_PATH
       - if: ${{ runner.os != 'Windows' }}
         run: sudo R CMD javareconf
         shell: bash
