@@ -39,20 +39,15 @@ jobs:
       - name: Install Linux dependencies
         if: ${{ runner.os == 'Linux' && env.debian-deps != '' }}
         run: |
-            echo "::group::Install Linux system dependencies"
             sudo apt-get install -y ${{ env.debian-deps }}
-            echo '::endgroup::'
         shell: bash
       - name: Install macOS dependencies
         if: ${{ runner.os == 'macOS' && env.macos-deps != '' }}
         run: |
-            echo "::group::Install macOS system dependencies"
             for i in ${{ env.macos-deps }}; do
               echo -n "  $i"
               curl -s https://mac.r-project.org/libs-4/$i-darwin.17-x86_64.tar.gz | sudo tar fxz - --strip 2 -C /usr/local
             done
-            echo ''
-            echo '::endgroup::'
         shell: bash
       - if: ${{ runner.os == 'Windows' }}
         run: |
@@ -62,7 +57,6 @@ jobs:
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
-            echo "::group::Install Windows system dependencies"
             mingw32.exe pacman -Sy
             mingw64.exe pacman -Sy
             for i in ${{ env.windows-deps }}; do
@@ -70,8 +64,6 @@ jobs:
               mingw32.exe pacman --sync --noconfirm mingw-w64-i686-$i
               mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i
             done
-            echo ''
-            echo '::endgroup::'
         shell: bash
 
       - if: ${{ runner.os == 'macOS' }}
