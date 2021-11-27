@@ -56,8 +56,9 @@ jobs:
         shell: bash
       - if: ${{ runner.os == 'Windows' }}
         run: |
-          echo "C:\\rtools" >> $GITHUB_PATH
-          echo "C:\\rtools40" >> $GITHUB_PATH
+          echo "C:\rtools" >> $GITHUB_PATH
+          echo "C:\rtools40" >> $GITHUB_PATH
+        shell: bash
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
