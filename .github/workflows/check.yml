@@ -60,7 +60,7 @@ jobs:
             echo "::group::Install Windows system dependencies"
             for i in ${{ env.windows-deps }}; do
               echo -n "  $i"
-              choco install --no-progress -y $i
+              C:\rtools40\mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i
             done
             echo ''
             echo '::endgroup::'
