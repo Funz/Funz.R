@@ -32,7 +32,7 @@ startCalculators <- function(n=1) {
     p=NULL
     if (Sys.info()[['sysname']]=="Windows")
         for (i in 1:n)
-        p = c(p,process$new("cmd.exe", c("/c", "call", file.path(FUNZ_HOME,"FunzDaemon.bat")),
+        p = c(p,process$new("cmd.exe", c("/c", "call", gsub("/","\\\\",file.path(FUNZ_HOME,"FunzDaemon.bat"))),
                 stdout = NULL, stderr = NULL))
     else
         for (i in 1:n)
