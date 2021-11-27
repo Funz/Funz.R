@@ -61,7 +61,7 @@ jobs:
             C:\\rtools\\mingw64.exe pacman -Sy
             for i in ${{ env.windows-deps }}; do
               echo -n "  $i"
-              C:\\rtools\\mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i
+              C:\\rtools40\\mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i
             done
             echo ''
             echo '::endgroup::'
