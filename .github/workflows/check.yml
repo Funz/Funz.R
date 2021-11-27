@@ -54,11 +54,14 @@ jobs:
             echo ''
             echo '::endgroup::'
         shell: bash
+      - if: ${{ runner.os == 'Windows' }}
+        run: |
+          echo "C:\\rtools" >> $GITHUB_PATH
+          echo "C:\\rtools40" >> $GITHUB_PATH
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
             echo "::group::Install Windows system dependencies"
-            cd C:\\rtools*
             mingw32.exe pacman -Sy
             mingw64.exe pacman -Sy
             for i in ${{ env.windows-deps }}; do
