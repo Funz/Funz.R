@@ -48,7 +48,7 @@ jobs:
       shell: bash
     - run: Rscript -e "library('Funz'); Design(fun = function(X){colnames(X)=c('x1','x2');print(X);abs(X\$x1*X\$x2)}, design = 'GradientDescent', options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[1,2]'))" > ${{ matrix.os }}-R${{ matrix.R }}/Design.Rout
       shell: bash
-    - run: Rscript -e "library('Funz'); RunDesign(model='R',input.files=file.path(Funz:::FUNZ_HOME,'samples','branin.R'),output.expressions='cat', design = 'GradientDescent',design.options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[0,1]'))" > ${{ matrix.os }}-R${{ matrix.R }}/RunDesign.Rout
+    - run: Rscript -e "library('Funz'); RunDesign(model='R',input.files=file.path(Funz:::FUNZ_HOME,'samples','branin.R'),output.expressions='z', design = 'GradientDescent',design.options = list(max_iterations=10),input.variables = list(x1='[0,1]',x2='[0,1]'))" > ${{ matrix.os }}-R${{ matrix.R }}/RunDesign.Rout
       shell: bash
     - uses: actions/upload-artifact@v2
       if: ${{ always() }}
