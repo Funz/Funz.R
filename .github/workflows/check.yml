@@ -58,7 +58,7 @@ jobs:
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
             echo "::group::Install Windows system dependencies"
-            C:\\rtools\\mingw64.exe pacman -Sy
+            C:\\rtools40\\mingw64.exe pacman -Sy
             for i in ${{ env.windows-deps }}; do
               echo -n "  $i"
               C:\\rtools40\\mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i
