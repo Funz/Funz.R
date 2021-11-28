@@ -38,7 +38,7 @@ jobs:
     - if: matrix.os == 'ubuntu-latest'
       run: sudo apt install -y libcurl4-openssl-dev
     - run: |
-        Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org'); download.file('https://raw.githubusercontent.com/Funz/Funz.R/master/DESCRIPTION','DESCRIPTION');  install.packages(repos = 'https://cloud.r-project.org', gsub(' ','',gsub('\\\\\\(.*\\\\\\)','',strsplit(remotes:::read_dcf('DESCRIPTION')\$Imports,split=',')[[1]])))"; \
+        Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org'); download.file('https://raw.githubusercontent.com/Funz/Funz.R/master/DESCRIPTION','DESCRIPTION');  install.packages(repos = 'https://cloud.r-project.org', gsub(' ','',gsub('\\\\(.*\\\\)','',strsplit(remotes:::read_dcf('DESCRIPTION')\$Imports,split=',')[[1]])))"; \
         Rscript -e "install.packages('devtools', repos= 'https://cloud.r-project.org'); devtools::install_github('Funz/Funz.R',dependencies=FALSE, INSTALL_opts=c('--no-multiarch'))" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
         Rscript -e "library(Funz); install.Design('GradientDescent')" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout
       shell: bash

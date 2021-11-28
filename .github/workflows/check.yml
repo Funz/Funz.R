@@ -72,7 +72,7 @@ jobs:
         run: sudo R CMD javareconf
         shell: bash
 
-      - run: Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" -e "remotes::install_deps(dependencies = TRUE, type='binary')"
+      - run: Rscript -e "install.packages('remotes', repos = 'https://cloud.r-project.org')" -e "remotes::install_deps(dependencies = TRUE, type=if (R.Version()$os=='linux-gnu') 'source' else 'binary')"
 
       - if: failure()
         uses: actions/upload-artifact@v2
