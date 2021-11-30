@@ -42,7 +42,7 @@ jobs:
         Rscript -e "install.packages('devtools', repos= 'https://cloud.r-project.org'); devtools::install_github('Funz/Funz.R',dependencies=FALSE, INSTALL_opts=c('--no-multiarch'))" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
         Rscript -e "library(Funz); install.Design('GradientDescent')" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout
       shell: bash
-    - uses: BerniWittmann/background-server-action@latest
+    - uses: cypress-io/github-action@v2
       with:
         start: Rscript -e "library('Funz'); calcs = startCalculators(5); Sys.sleep(3600)" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout &
     - run: Rscript -e "library('Funz'); Run(model = 'R',input.files = file.path(Funz:::FUNZ_HOME,'samples','branin.R'),input.variables = list(x1=seq(0,1,by=0.1),x2=seq(0,1,by=0.1)),all.combinations=TRUE,output.expressions = 'z')" > ${{ matrix.os }}-R${{ matrix.R }}/Run.Rout
