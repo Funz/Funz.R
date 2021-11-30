@@ -1,0 +1,86 @@
+package org.funz;
+
+/** Used to save/load projects */
+public interface XMLConstants {
+
+   
+    public static final String ELEM_FUNZ = "FUNZ";
+    public final static String ELEM_FILE = "FILE";
+    public final static String ELEM_VARIABLE = "VARIABLE";
+    public final static String ELEM_VAR = "VAR";
+    public final static String ELEM_GROUP = "GROUP";
+    public final static String ELEM_PARAM = "PARAMETER";
+    public final static String ELEM_ELEMENT = "ELEM";
+    public final static String ELEM_ALIAS = "ALIAS";
+    public final static String ELEM_SOURCE = "SOURCE";
+    public final static String ELEM_TVALUE = "TVALUE";
+    public final static String ELEM_OPTION = "OPT";
+    public final static String ELEM_DESIGNER_ID = "DESIGNER";
+    public final static String ELEM_SPLINE_NODE = "SNODE";
+    public final static String ELEM_CASE_LIST = "CASES";
+    public final static String ELEM_CASE = "CASE";
+    public final static String ELEM_CASE_NODE = "NODE";
+    public final static String ELEM_CASE_OUT = "OUTPUT";
+    public final static String ELEM_CASE_IN = "INPUT";
+    public final static String ELEM_CASE_INTER = "INTERMEDIATE";
+    public final static String ELEM_SESSIONS = "SESSIONS";
+    public final static String ELEM_SESSION = "SESSION";
+    public final static String ELEM_ANALYSIS = "analysis";
+    public final static String ELEM_PROP = "PROP";
+    public final static String LISTSEPARATOR = ",,";
+    public final static String ATTR_NAME = "name";
+    public final static String ATTR_PATH = "path";
+    public final static String ATTR_SOURCE = "source";
+    public final static String ATTR_ALIAS = "alias";
+    public final static String ATTR_IS_LOOP = "isloop";
+    public final static String ATTR_CODE = "code";
+    public final static String ATTR_DESIGNER_ID = "designer-id";
+    public final static String ATTR_OUTFN = "outputfunction";
+    public final static String ATTR_OUTFN_LIST = "outputFunctionsList";
+    public final static String ATTR_PLUGIN = "plugin";
+    public final static String ATTR_VERSION = "version";
+    public final static String ATTR_FOR = "for";
+    public final static String ATTR_COMMENT = "comment";
+    public final static String ATTR_TYPE = "type";//defunct !
+    public final static String ATTR_MODEL = "model";
+    public final static String ATTR_GROUP = "group";
+    public final static String ATTR_LOWER = "lower";
+    public final static String ATTR_UPPER = "upper";
+    public final static String ATTR_DEFVAL = "defaultvalue";
+    public final static String ATTR_DEFMOD = "defaultmodel";
+    public final static String ATTR_COUNT = "count";
+    public final static String ATTR_VARS = "vars";
+    public final static String ATTR_VALUE = "value";
+    public final static String ATTR_KEY = "key";
+    public final static String ATTR_ROUND_OFF = "round-off";
+    public final static String ATTR_IS_SCI = "issci";
+    public final static String ATTR_VAR_START = "varstart";
+    public final static String ATTR_VAR_LIM = "varllim";
+    public final static String ATTR_FRM_START = "frmstart";
+    public final static String ATTR_FRM_LIM = "frmllim";
+    public final static String ATTR_IS_STICKY = "sticky";
+    public final static String ATTR_FROM = "from";
+    public final static String ATTR_TO = "to";
+    public final static String ATTR_STEP = "step";
+    public final static String ATTR_IS_HOR = "horizontal";
+    public final static String ATTR_GREP_FILE = "grep-file";
+    public final static String ATTR_GREP_TEXT = "grep-text";
+    public final static String ATTR_GREP_ORDER = "grep-order";
+    public final static String ATTR_CONST_TYPE = "type-predefined";
+    public final static String ATTR_IS_CONTINUOUS = "is-continuous";
+    public final static String ATTR_PARAM_VARIABLE = "param-var";
+    public final static String ATTR_PARAM = "param";
+    public final static String ATTR_DISC_CASE_ID = "dci";
+    public final static String ATTR_IDX = "idx";
+    public final static String ATTR_CALC_NAME = "calc";
+    public final static String ATTR_START = "start";
+    public final static String ATTR_END = "end";
+    public final static String ATTR_SELECTED = "sel";
+    public final static String ATTR_SEL_IDX = "sel-idx";
+    public final static String ATTR_STATE = "state";
+    public final static String ATTR_RESULT = "res";
+    public final static String ATTR_X = "x";
+    public final static String ATTR_Y = "y";
+    public final static String ATTR_CONTINUOUS_TYPE = "cont-type";
+    public final static String ATTR_FORMULA = "formula";
+}
