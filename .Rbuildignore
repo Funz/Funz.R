@@ -10,5 +10,4 @@ cran-comments.md
 ^\.git.*
 ^.*\.txt
 ^.*\.HTML
-^.*\.xml
 ^inst/java
