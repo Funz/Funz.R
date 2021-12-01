@@ -5,6 +5,7 @@ cd `dirname $0`
 
 echo "PWD="$PWD
 echo "lib: "`ls lib`
+echo "ls: "`ls`
 
 MAIN=org.funz.calculator.Calculator
 
