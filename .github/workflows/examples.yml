@@ -42,7 +42,7 @@ jobs:
         Rscript -e "install.packages('devtools', repos= 'https://cloud.r-project.org'); devtools::install_github('Funz/Funz.R',dependencies=FALSE, INSTALL_opts=c('--no-multiarch'))" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
         Rscript -e "library(Funz); install.Design('GradientDescent')" >> ${{ matrix.os }}-R${{ matrix.R }}/install.Rout
       shell: bash
-    - run: Rscript -e "library('Funz'); calcs = startCalculators(5,stdout='|',stderr='|'); print(calcs); for (p in calcs) print(p$read_output_lines()); Grid(); Sys.sleep(3600)" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout &
+    - run: Rscript -e "library('Funz'); calcs = startCalculators(5,stdout='|',stderr='|'); print(calcs); for (p %in% calcs) print(p$read_output_lines()); Grid(); Sys.sleep(3600)" > ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout &
       shell: bash
     - run: Rscript -e "library('Funz'); Grid()" >> ${{ matrix.os }}-R${{ matrix.R }}/Calcs.Rout &
       shell: bash
