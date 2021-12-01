@@ -1,6 +1,8 @@
-@echo off
+@echo on
 
 cd %~dp0
+
+dir lib
 
 SET MAIN=org.funz.calculator.Calculator
 
@@ -46,5 +48,8 @@ SET CALCULATOR=file:calculator.xml
 hostname > %TEMP%\hostname.txt
 FOR /F %%i in (%TEMP%\hostname.txt) do set HOSTN=%%i
 IF EXIST calculator-%HOSTN%.xml (SET CALCULATOR=file:calculator-%HOSTN%.xml)
+
+echo "LIB: "%LIB%
+echo "CALCULATOR: "%CALCULATOR%
 
 start java -Dapp.home=. -classpath %LIB% %MAIN% %CALCULATOR%
