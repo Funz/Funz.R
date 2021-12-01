@@ -62,7 +62,9 @@ installed.Models <- function() {
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' available.Models()
+#' }
 available.Models <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
       .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
@@ -239,7 +241,9 @@ installed.Designs <- function() {
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' available.Designs()
+#' }
 available.Designs <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
     .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
