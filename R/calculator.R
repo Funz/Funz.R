@@ -19,6 +19,8 @@ Grid <- function(){
 #' Start calculator instances (also named as "funz daemons")
 #'
 #' @param n number of calculators to start
+#' @param stdout calculators output stream: NULL (default) or "|"
+#' @param stderr calculators error stream: NULL (default) or "|"
 #' @return processx objects of started calculators
 #' @export
 #' @import processx
@@ -33,11 +35,11 @@ startCalculators <- function(n=1, stdout=NULL, stderr=NULL) {
     if (Sys.info()[['sysname']]=="Windows")
         for (i in 1:n)
         p = c(p,process$new("cmd.exe", c("/c", "call", gsub("/","\\\\",file.path(FUNZ_HOME,"FunzDaemon.bat"))),
-                stdout = stdout, stderr = stderr))
+                            wd = FUNZ_HOME, stdout = stdout, stderr = stderr))
     else
         for (i in 1:n)
         p = c(p,process$new("/bin/bash", c("-c", file.path(FUNZ_HOME,"FunzDaemon.sh")),
-                stdout = stdout, stderr = stderr))
+                            wd = FUNZ_HOME, stdout = stdout, stderr = stderr))
     p
 }
 
