@@ -28,16 +28,16 @@ Grid <- function(){
 #' # This will start 5 instances of calculator waiting for a "Run()" call
 #' startCalculators(5)
 #' }
-startCalculators <- function(n=1) {
+startCalculators <- function(n=1, stdout=NULL, stderr=NULL) {
     p=NULL
     if (Sys.info()[['sysname']]=="Windows")
         for (i in 1:n)
         p = c(p,process$new("cmd.exe", c("/c", "call", gsub("/","\\\\",file.path(FUNZ_HOME,"FunzDaemon.bat"))),
-                stdout = NULL, stderr = NULL))
+                stdout = stdout, stderr = stderr))
     else
         for (i in 1:n)
         p = c(p,process$new("/bin/bash", c("-c", file.path(FUNZ_HOME,"FunzDaemon.sh")),
-                stdout = NULL, stderr = NULL))
+                stdout = stdout, stderr = stderr))
     p
 }
 
