@@ -8,3 +8,6 @@ LICENSE
 report.*$
 cran-comments.md
 ^\.git.*
+^.*\.txt
+^.*\.HTML
+^inst/java
