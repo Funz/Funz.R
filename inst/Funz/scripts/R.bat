@@ -8,7 +8,7 @@ set PID_R="none"
 for /F "TOKENS=1,2,*" %%a in ('tasklist /FI "WINDOWTITLE eq R_%id%"') do set PID_R=%%b
 echo %PID_R% > PID
 
-if "%PID_R%" != "none" (
+if not "%PID_R%" == "none" (
 :loop
 tasklist | findstr " %PID_R% " >nul
 if not errorlevel 1 (
