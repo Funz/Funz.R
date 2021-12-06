@@ -1,11 +1,6 @@
 #!/bin/bash
-echo "dirname \$0 "`dirname $0`
 
 cd `dirname $0`
-
-echo "PWD="$PWD
-echo "lib: "`ls lib`
-echo "ls: "`ls`
 
 MAIN=org.funz.calculator.Calculator
 
@@ -17,8 +12,5 @@ if [ -e calculator-`hostname`.xml ]
 then
 CALCULATOR=file:calculator-`hostname`.xml
 fi
-
-echo "LIB: "$LIB
-echo "CALCULATOR: "$CALCULATOR
 
 java -Dapp.home=. -classpath $LIB $MAIN $CALCULATOR
