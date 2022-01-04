@@ -46,7 +46,7 @@ Run <- function(model=NULL,input.files,
     return(Funz_Run(model=model,input.files=input.files,
              input.variables=input.variables,all.combinations=all.combinations,output.expressions=output.expressions,
              run.control=run.control,monitor.control=monitor.control,
-             archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=F))
+             archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=!is.null(archive.dir)))
 }
 
 
@@ -93,7 +93,7 @@ Design <- function(fun, design, options=NULL,
     return(Funz_Design(fun=fun,design=design,options=options,
                 input.variables=input.variables,
                 fun.control=fun.control,monitor.control=monitor.control,
-                archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=FALSE,...))
+                archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=!is.null(archive.dir),...))
 }
 
 #' Get last Funz Design() call
@@ -155,7 +155,7 @@ RunDesign <- function(model=NULL,input.files,
     return(Funz_RunDesign(model=model,input.files=input.files,output.expressions=output.expressions,
                    design=design,input.variables=input.variables,design.options=design.options,
                                run.control=run.control,monitor.control=monitor.control,
-                               archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=FALSE))
+                               archive.dir=archive.dir,out.filter=out.filter,verbosity=verbosity,log.file=!is.null(archive.dir)))
 }
 
 #' Get last Funz RunDesign(...) call
