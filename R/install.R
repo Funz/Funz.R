@@ -22,8 +22,10 @@
   if (!dir.exists(APP_USER)) APP_USER=tempdir()
   Xmx=Sys.getenv("FUNZ_Xmx")
   if (nchar(Xmx)==0) Xmx="512m"
+  verb=as.integer(Sys.getenv("FUNZ_verbosity"))
+  if (is.na(verb)) verb=0
   Funz.init(FUNZ_HOME,
-            verbosity=0,
+            verbosity=verb,
             java.control=if (Sys.info()[['sysname']]=="Windows")
                            list(Xmx=Xmx, Xss="256k", app.user=APP_USER, USE_RSERVE_FROM_CRAN="true")
                          else
