@@ -20,12 +20,14 @@
 .onAttach <- function(libname, pkgname) {
   APP_USER=file.path(Sys.getenv("HOME"),".Funz")
   if (!dir.exists(APP_USER)) APP_USER=tempdir()
+  Xmx=Sys.getenv("FUNZ_Xmx")
+  if (nchar(Xmx)==0) Xmx="512m"
   Funz.init(FUNZ_HOME,
             verbosity=0,
             java.control=if (Sys.info()[['sysname']]=="Windows")
-                           list(Xmx="512m", Xss="256k", app.user=APP_USER, USE_RSERVE_FROM_CRAN="true")
+                           list(Xmx=Xmx, Xss="256k", app.user=APP_USER, USE_RSERVE_FROM_CRAN="true")
                          else
-                           list(Xmx="512m",             app.user=APP_USER, USE_RSERVE_FROM_CRAN="true"))
+                           list(Xmx=Xmx,             app.user=APP_USER, USE_RSERVE_FROM_CRAN="true"))
 
   # That should cleanup remaining Funz processes (incl. Rserve)
   reg.finalizer(.env, function(x){try(x$.jclassFunz$end())}, onexit = TRUE)
