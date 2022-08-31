@@ -19,11 +19,11 @@ for (l in libs) {
 
 ## Install
 
-Just use the standard 'install.packages("Funz")' command:
+Just use the standard ~~'install.packages("Funz")'~~ 'install_github("Funz/Funz.R")' command:
 ```{r setup}
 # install Funz if needed
 if (!("Funz" %in% installed.packages()))
-    devtools::install_github("Funz/Funz.R")
+    remotes::install_github("Funz/Funz.R")
 
 library(Funz)
 install.Design("GradientDescent") # required for later example
