@@ -208,13 +208,14 @@ CompileInput <- function(model,input.files,input.values,output.dir=".") {
 #' @param model name of the code wrapper to use. See .Funz.Models global var for a list of possible values.
 #' @param input.files files given as input for the code.
 #' @param output.dir directory where calculated files are.
-#'
+#' @param out.filter what output(s) to retreive in returned object.
+#''
 #' @return list of outputs & their value
 #' @export
 #' @examples
 #' \dontrun{
 #' ReadOutput(model = "R", input.files = "branin.R",output.dir=".")
 #' }
-ReadOutput <- function(model, input.files, output.dir) {
-    return(Funz_ReadOutput(model=model, input.files=input.files, output.dir=output.dir))
+ReadOutput <- function(model, input.files, output.dir, out.filter=NULL) {
+    return(Funz_ReadOutput(model=model, input.files=input.files, output.dir=output.dir, out.filter=out.filter))
 }
