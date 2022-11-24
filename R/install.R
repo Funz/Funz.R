@@ -86,10 +86,11 @@ available.Models <- function(refresh_repo = F) {
 #' @param model.zip zip file of plugin. Usually plugin-XYZ.zip
 #' @param model model name (parsed in model.zip if not provided)
 #' @param force if already installed, reinstall.
+#' @param edit.script open installed script for customization.
 #' @param ... optional parameters to pass to unzip()
 #'
 #' @export
-install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plugin-","",model.zip)),force=F,...) {
+install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plugin-","",model.zip)),force=F,edit.script=FALSE,...) {
   if (model %in% installed.Models())
     if (!force) {
       warning("Model ",model," was already installed. Skipping new installation.")
@@ -110,7 +111,7 @@ install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plu
     message("Installed Funz model ",model)
 
   # .. in the end, configure model script
-  setup.Model(model=model)
+  setup.Model(model=model, edit.script=edit.script)
 }
 
 
@@ -119,7 +120,7 @@ install_file.Model <- function(model.zip, model=gsub(".zip(.*)","",gsub("(.*)plu
 #' @param model Name of model corresponding to given script
 #'
 #' @export
-setup.Model <- function(model) {
+setup.Model <- function(model, edit.script=FALSE) {
   # Setup script file
   if (Sys.info()[['sysname']]=="Windows")
     script = file.path(FUNZ_HOME,"scripts",paste0(model,".bat"))
@@ -135,8 +136,10 @@ setup.Model <- function(model) {
                  file(script))
     }
 
-  message("The script used to launch ",model," is now opened in the editor.")
-  utils::file.edit(script)
+  if (isTRUE(edit.script)) {
+    message("The script used to launch ",model," is now opened in the editor.")
+    utils::file.edit(script)
+  }
   Sys.chmod(script,"0755")
 
   # Update calculator.xml
@@ -184,13 +187,14 @@ setup.Model <- function(model) {
 #'
 #' @param model model to install.
 #' @param force if already installed, reinstall.
+#' @param edit.script open installed script for customization.
 #'
 #' @export
 #' @examples
 #' \dontrun{
 #' install_github.Model('Modelica')
 #' }
-install_github.Model <- function(model,force=F) {
+install_github.Model <- function(model,force=F, edit.script=FALSE) {
   major = gsub("-(.*)","",utils::packageDescription("Funz")$Version)
   model.zip = tempfile(paste0("plugin-",model,".zip"))
   for (minor in 10:0) {
@@ -201,13 +205,14 @@ install_github.Model <- function(model,force=F) {
   }
   if (is.null(z)) stop("Could not download model ",model)
 
-  install_file.Model(model.zip=model.zip, force=force)
+  install_file.Model(model.zip=model.zip, force=force, edit.script=edit.script)
 }
 
 #' Install Funz model from local file or GitHub central repository
 #'
 #' @param model model to install.
 #' @param force if already installed, reinstall.
+#' @param edit.script open installed script for customization.
 #'
 #' @export
 #'
@@ -215,12 +220,12 @@ install_github.Model <- function(model,force=F) {
 #' \dontrun{
 #' install.Model('Modelica')
 #' }
-install.Model <- function(model,force=F) {
+install.Model <- function(model,force=F, edit.script=FALSE) {
   if (file.exists(model))
-    install_file.Model(model, force)
+    install_file.Model(model, force, edit.script)
   else {
     if (model %in% available.Models())
-      install_github.Model(model, force)
+      install_github.Model(model, force, edit.script)
     else
       stop("Model ",model," is not available.")
   }
