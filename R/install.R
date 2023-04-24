@@ -13,13 +13,17 @@
 #      stop(paste("Rserve version (",Rserve.version,") is too old. Please update to >=1.7-5 or 1-8"))
 
 .onLoad <- function(libname, pkgname) {
+  cat("Load Funz...")
   assign("FUNZ_HOME",system.file("Funz", package = "Funz"), envir = parent.env(environment()))
+  cat(paste0("  FUNZ_HOME: ",FUNZ_HOME)
   source(file.path(FUNZ_HOME,"Funz.R"),local=parent.env(environment()))
 }
 
 .onAttach <- function(libname, pkgname) {
+  cat("Attach Funz...")
   APP_USER=file.path(Sys.getenv("HOME"),".Funz")
   if (!dir.exists(APP_USER)) APP_USER=tempdir()
+  cat(paste0("  APP_USER: ",APP_USER)
   Xmx=Sys.getenv("FUNZ_Xmx")
   if (nchar(Xmx)==0) Xmx="512m"
   verb=as.integer(Sys.getenv("FUNZ_verbosity"))
@@ -32,7 +36,7 @@
                            list(Xmx=Xmx,             app.user=APP_USER, USE_RSERVE_FROM_CRAN="true"))
 
   # That should cleanup remaining Funz processes (incl. Rserve)
-  reg.finalizer(.env, function(x){try(x$.jclassFunz$end())}, onexit = TRUE)
+  reg.finalizer(.env, function(x){cat("Finalize Funz..."); try(x$.jclassFunz$end())}, onexit = TRUE)
 }
 
 .github_pattern <- "https://github.com/Funz/__TYPE__-__MODEL__/releases/download/v__MAJOR__-__MINOR__/__TYPE__-__MODEL__.zip"
