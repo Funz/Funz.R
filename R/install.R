@@ -15,7 +15,7 @@
 .onLoad <- function(libname, pkgname) {
   cat("Load Funz...")
   assign("FUNZ_HOME",system.file("Funz", package = "Funz"), envir = parent.env(environment()))
-  cat(paste0("  FUNZ_HOME: ",FUNZ_HOME)
+  cat(paste0("  FUNZ_HOME: ",FUNZ_HOME))
   source(file.path(FUNZ_HOME,"Funz.R"),local=parent.env(environment()))
 }
 
@@ -23,7 +23,7 @@
   cat("Attach Funz...")
   APP_USER=file.path(Sys.getenv("HOME"),".Funz")
   if (!dir.exists(APP_USER)) APP_USER=tempdir()
-  cat(paste0("  APP_USER: ",APP_USER)
+  cat(paste0("  APP_USER: ",APP_USER))
   Xmx=Sys.getenv("FUNZ_Xmx")
   if (nchar(Xmx)==0) Xmx="512m"
   verb=as.integer(Sys.getenv("FUNZ_verbosity"))
