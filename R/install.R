@@ -155,7 +155,7 @@ setup.Model <- function(model, edit.script=FALSE) {
         attr(node,"command") <- normalizePath(script)
         cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
         if (file.exists(cplugin))
-          attr(node,"cplugin") <- normalizePath(cplugin)
+          attr(node,"cplugin") <- paste0("file:/",normalizePath(cplugin))
       }
     if (isTRUE(node == "[ comment ]")) {
       node <- NA
@@ -169,7 +169,7 @@ setup.Model <- function(model, edit.script=FALSE) {
     attr(node,"command") <- normalizePath(script)
     cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
     if (file.exists(cplugin))
-      attr(node,"cplugin") <- normalizePath(cplugin)
+      attr(node,"cplugin") <- paste0("file:/",normalizePath(cplugin))
   }
   calculator.xml$CALCULATOR[[i+1]] <- node
   names(calculator.xml$CALCULATOR)[[i+1]] <- "CODE"
@@ -181,6 +181,18 @@ setup.Model <- function(model, edit.script=FALSE) {
     file.path(FUNZ_HOME,"calculator.xml"),
     options=c("format","no_empty_tags","no_declaration","as_xml"))
 
+}
+
+#' Setup calculators in calculator.xml file.
+#'
+#' @export
+#' @examples
+#' \dontrun{
+#' setup.Calculator()
+#' }
+setup.Calculator <- function() {
+  message(paste0("The calculator.xml file is now opened in the editor: ",file.path(FUNZ_HOME,"calculator.xml")))
+  utils::file.edit(file.path(FUNZ_HOME,"calculator.xml"))
 }
 
 #' Install Funz model plugin from central GitHub repository.
@@ -241,7 +253,7 @@ install.Model <- function(model,force=F, edit.script=FALSE) {
 #' @examples
 #' installed.Designs()
 installed.Designs <- function() {
-  .env$.jclassFunz$getDesignList()
+  Funz:::.env$.jclassFunz$getDesignList()
 }
 
 #' List available designs from Funz GitHub repository
