@@ -253,7 +253,7 @@ install.Model <- function(model,force=F, edit.script=FALSE) {
 #' @examples
 #' installed.Designs()
 installed.Designs <- function() {
-  Funz:::.env$.jclassFunz$getDesignList()
+  .env$.jclassFunz$getDesignList()
 }
 
 #' List available designs from Funz GitHub repository
