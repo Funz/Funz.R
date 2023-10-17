@@ -16,7 +16,7 @@ jobs:
         r-version: [ 3.6, oldrel, release, devel ]
 
     env:
-      debian-deps: libssl-dev libcurl4-openssl-dev
+      debian-deps: libssl-dev libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
       macos-deps: openssl-1.1.1h
       windows-deps: openssl
 

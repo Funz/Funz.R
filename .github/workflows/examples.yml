@@ -36,7 +36,7 @@ jobs:
     - if: matrix.os == 'ubuntu-latest' || matrix.os == 'macos-latest'
       run: sudo R CMD javareconf
     - if: matrix.os == 'ubuntu-latest'
-      run: sudo apt install -y libcurl4-openssl-dev
+      run: sudo apt install -y libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
     - run: |
         Rscript -e "if (R.Version()[['os']]!='linux-gnu') options(install.packages.compile.from.source='never'); install.packages('remotes', repos = 'https://cloud.r-project.org'); download.file('https://raw.githubusercontent.com/Funz/Funz.R/master/DESCRIPTION','DESCRIPTION'); remotes::install_deps(dependencies=TRUE)" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
         Rscript -e "install.packages('devtools', repos= 'https://cloud.r-project.org'); devtools::install_github('Funz/Funz.R',dependencies=FALSE, INSTALL_opts=c('--no-multiarch'))" > ${{ matrix.os }}-R${{ matrix.R }}/install.Rout; \
