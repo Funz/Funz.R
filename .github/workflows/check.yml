@@ -53,16 +53,19 @@ jobs:
         run: |
           echo "C:\rtools" >> $GITHUB_PATH
           echo "C:\rtools40" >> $GITHUB_PATH
+          echo "C:\rtools41" >> $GITHUB_PATH
+          echo "C:\rtools42" >> $GITHUB_PATH
+          echo "C:\rtools43" >> $GITHUB_PATH
         shell: bash
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
-            mingw32.exe pacman -Sy
-            mingw64.exe pacman -Sy
+            mingw32.exe pacman -Sy || echo "No mingw32.exe"
+            mingw64.exe pacman -Sy || echo "No mingw64.exe"
             for i in ${{ env.windows-deps }}; do
               echo -n "  $i"
-              mingw32.exe pacman --sync --noconfirm mingw-w64-i686-$i
-              mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i
+              mingw32.exe pacman --sync --noconfirm mingw-w64-i686-$i || echo "No mingw32.exe"
+              mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i || echo "No mingw64.exe"
             done
         shell: bash
 
