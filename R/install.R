@@ -74,7 +74,7 @@ installed.Models <- function() {
 #' }
 available.Models <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
-      .github_repos <- jsonlite::fromJSON(readLines(curl::curl("https://api.github.com/orgs/Funz/repos?per_page=100")))
+      .github_repos <- jsonlite::fromJSON(readLines(curl::curl("https://api.github.com/orgs/Funz/repos?per_page=100"),warn=FALSE))
                        # not working behind some proxy: gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("plugin-","",
@@ -271,7 +271,7 @@ installed.Designs <- function() {
 #' }
 available.Designs <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
-    .github_repos <- jsonlite::fromJSON(readLines(curl::curl("https://api.github.com/orgs/Funz/repos?per_page=100")))
+    .github_repos <- jsonlite::fromJSON(readLines(curl::curl("https://api.github.com/orgs/Funz/repos?per_page=100"),warn=FALSE))
                       # not working behind some proxy: gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("algorithm-","",
