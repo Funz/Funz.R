@@ -78,8 +78,8 @@ available.Models <- function(refresh_repo = F) {
                        # not working behind some proxy: gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("plugin-","",
-       unlist(lapply(.github_repos,
-                     function(r) {if (length(grep("plugin-",r$name))>0) r$name else NULL})),
+       unlist(lapply(.github_repos$name,
+                     function(r) {if (length(grep("plugin-",r))>0) r else NULL})),
        fixed=T)
 }
 
@@ -275,8 +275,8 @@ available.Designs <- function(refresh_repo = F) {
                       # not working behind some proxy: gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("algorithm-","",
-       unlist(lapply(.github_repos,
-                     function(r) {if (length(grep("algorithm-",r$name))>0) r$name else NULL})),
+       unlist(lapply(.github_repos$name,
+                     function(r) {if (length(grep("algorithm-",r))>0) r else NULL})),
        fixed=T)
 }
 
