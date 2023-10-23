@@ -44,7 +44,7 @@
                       .github_pattern))))
 }
 
-.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
+# should blok at package install/lazy load if not connected: .github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 if (length(.github_repos)==0) .github_repos <- NA
 
 ############################ Models #################################
