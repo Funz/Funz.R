@@ -74,7 +74,7 @@ installed.Models <- function() {
 #' }
 available.Models <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
-      .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
+      .github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("plugin-","",
        unlist(lapply(.github_repos,
@@ -270,7 +270,7 @@ installed.Designs <- function() {
 #' }
 available.Designs <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
-    .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
+    .github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("algorithm-","",
        unlist(lapply(.github_repos,
