@@ -235,14 +235,13 @@ install_github.Model <- function(model,force=F, edit.script=FALSE) {
 #' install.Model('Modelica')
 #' }
 install.Model <- function(model,force=F, edit.script=FALSE) {
-  if (file.exists(model))
-    install_file.Model(model, force, edit.script)
-  else {
-    if (model %in% available.Models())
-      install_github.Model(model, force, edit.script)
-    else
-      stop("Model ",model," is not available.")
-  }
+  if (file.exists(model) && !dir.exists(model))
+    try({install_file.Model(model, force, edit.script); return()})
+  
+  if (model %in% available.Models())
+    install_github.Model(model, force, edit.script)
+  else
+    stop("Model ",model," is not available.")
 }
 
 
@@ -350,12 +349,11 @@ install_github.Design <- function(design,force=F) {
 #' install.Design('GradientDescent')
 #' }
 install.Design <- function(design,force=F) {
-  if (file.exists(design))
-    install_file.Design(design, force)
-  else {
-    if (design %in% available.Designs())
-      install_github.Design(design, force)
-    else
-      stop("Design ",design," is not available.")
-  }
+  if (file.exists(design) && !dir.exists(design))
+    try({install_file.Design(design, force); return()})
+  
+  if (design %in% available.Designs())
+    install_github.Design(design, force)
+  else
+    stop("Design ",design," is not available.")
 }
