@@ -157,7 +157,7 @@ setup.Model <- function(model, edit.script=FALSE) {
         attr(node,"command") <- normalizePath(script)
         cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
         if (file.exists(cplugin))
-          attr(node,"cplugin") <- paste0("file:/",normalizePath(cplugin))
+          attr(node,"cplugin") <- paste0("file://",normalizePath(cplugin))
       }
     if (isTRUE(node == "[ comment ]")) {
       node <- NA
@@ -171,7 +171,7 @@ setup.Model <- function(model, edit.script=FALSE) {
     attr(node,"command") <- normalizePath(script)
     cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
     if (file.exists(cplugin))
-      attr(node,"cplugin") <- paste0("file:/",normalizePath(cplugin))
+      attr(node,"cplugin") <- paste0("file://",normalizePath(cplugin))
   }
   calculator.xml$CALCULATOR[[i+1]] <- node
   names(calculator.xml$CALCULATOR)[[i+1]] <- "CODE"
