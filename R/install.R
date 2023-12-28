@@ -44,8 +44,9 @@
                       .github_pattern))))
 }
 
-.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
-if (length(.github_repos)==0) .github_repos <- NA
+# should blok at package install/lazy load if not connected: .github_repos <- gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
+#if (length(.github_repos)==0) 
+  .github_repos <- NA
 
 ############################ Models #################################
 
@@ -73,11 +74,12 @@ installed.Models <- function() {
 #' }
 available.Models <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
-      .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
+      .github_repos <- jsonlite::fromJSON(readLines(curl::curl("https://api.github.com/orgs/Funz/repos?per_page=100"),warn=FALSE))
+                       # not working behind some proxy: gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("plugin-","",
-       unlist(lapply(.github_repos,
-                     function(r) {if (length(grep("plugin-",r$name))>0) r$name else NULL})),
+       unlist(lapply(.github_repos$name,
+                     function(r) {if (length(grep("plugin-",r))>0) r else NULL})),
        fixed=T)
 }
 
@@ -155,7 +157,7 @@ setup.Model <- function(model, edit.script=FALSE) {
         attr(node,"command") <- normalizePath(script)
         cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
         if (file.exists(cplugin))
-          attr(node,"cplugin") <- paste0("file:/",normalizePath(cplugin))
+          attr(node,"cplugin") <- paste0("file://",normalizePath(cplugin))
       }
     if (isTRUE(node == "[ comment ]")) {
       node <- NA
@@ -169,7 +171,7 @@ setup.Model <- function(model, edit.script=FALSE) {
     attr(node,"command") <- normalizePath(script)
     cplugin = file.path(FUNZ_HOME,"plugins","calc",paste0(model,".cplugin.jar"))
     if (file.exists(cplugin))
-      attr(node,"cplugin") <- paste0("file:/",normalizePath(cplugin))
+      attr(node,"cplugin") <- paste0("file://",normalizePath(cplugin))
   }
   calculator.xml$CALCULATOR[[i+1]] <- node
   names(calculator.xml$CALCULATOR)[[i+1]] <- "CODE"
@@ -233,14 +235,13 @@ install_github.Model <- function(model,force=F, edit.script=FALSE) {
 #' install.Model('Modelica')
 #' }
 install.Model <- function(model,force=F, edit.script=FALSE) {
-  if (file.exists(model))
-    install_file.Model(model, force, edit.script)
-  else {
-    if (model %in% available.Models())
-      install_github.Model(model, force, edit.script)
-    else
-      stop("Model ",model," is not available.")
-  }
+  if (file.exists(model) && !dir.exists(model))
+    try({install_file.Model(model, force, edit.script); return()})
+  
+  if (model %in% available.Models())
+    install_github.Model(model, force, edit.script)
+  else
+    stop("Model ",model," is not available.")
 }
 
 
@@ -269,11 +270,12 @@ installed.Designs <- function() {
 #' }
 available.Designs <- function(refresh_repo = F) {
   if (refresh_repo | any(is.na(.github_repos)))
-    .env$.github_repos <- gh::gh("/orgs/Funz/repos",.token=NA)
+    .github_repos <- jsonlite::fromJSON(readLines(curl::curl("https://api.github.com/orgs/Funz/repos?per_page=100"),warn=FALSE))
+                      # not working behind some proxy: gh::gh("/orgs/Funz/repos",.token=NA, per_page=100)
 
   gsub("algorithm-","",
-       unlist(lapply(.github_repos,
-                     function(r) {if (length(grep("algorithm-",r$name))>0) r$name else NULL})),
+       unlist(lapply(.github_repos$name,
+                     function(r) {if (length(grep("algorithm-",r))>0) r else NULL})),
        fixed=T)
 }
 
@@ -347,12 +349,11 @@ install_github.Design <- function(design,force=F) {
 #' install.Design('GradientDescent')
 #' }
 install.Design <- function(design,force=F) {
-  if (file.exists(design))
-    install_file.Design(design, force)
-  else {
-    if (design %in% available.Designs())
-      install_github.Design(design, force)
-    else
-      stop("Design ",design," is not available.")
-  }
+  if (file.exists(design) && !dir.exists(design))
+    try({install_file.Design(design, force); return()})
+  
+  if (design %in% available.Designs())
+    install_github.Design(design, force)
+  else
+    stop("Design ",design," is not available.")
 }

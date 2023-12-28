@@ -16,7 +16,7 @@ jobs:
         r-version: [ 3.6, oldrel, release, devel ]
 
     env:
-      debian-deps: libssl-dev libcurl4-openssl-dev
+      debian-deps: libssl-dev libcurl4-openssl-dev libharfbuzz-dev libfribidi-dev
       macos-deps: openssl-1.1.1h
       windows-deps: openssl
 
@@ -31,7 +31,7 @@ jobs:
           distribution: 'adopt'
           java-version: 11
 
-      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.r-version }}
 
@@ -53,16 +53,19 @@ jobs:
         run: |
           echo "C:\rtools" >> $GITHUB_PATH
           echo "C:\rtools40" >> $GITHUB_PATH
+          echo "C:\rtools41" >> $GITHUB_PATH
+          echo "C:\rtools42" >> $GITHUB_PATH
+          echo "C:\rtools43" >> $GITHUB_PATH
         shell: bash
       - name: Install Windows dependencies
         if: ${{ runner.os == 'Windows' && env.windows-deps != '' }}
         run: |
-            mingw32.exe pacman -Sy
-            mingw64.exe pacman -Sy
+            mingw32.exe pacman -Sy || echo "No mingw32.exe"
+            mingw64.exe pacman -Sy || echo "No mingw64.exe"
             for i in ${{ env.windows-deps }}; do
               echo -n "  $i"
-              mingw32.exe pacman --sync --noconfirm mingw-w64-i686-$i
-              mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i
+              mingw32.exe pacman --sync --noconfirm mingw-w64-i686-$i || echo "No mingw32.exe"
+              mingw64.exe pacman --sync --noconfirm mingw-w64-x86_64-$i mingw-w64-i686-$i || echo "No mingw64.exe"
             done
         shell: bash
 
